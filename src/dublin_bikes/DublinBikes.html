@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <link href="Style.css" rel="stylesheet" type="text/css">
+	<title>Dublin Bikes</title>
+</head>
+<body>
+	<h1>Dublin Bikes</h1>
+    <div class="container">
+        <!-- Inputting the map adapted from https://www.w3schools.com/graphics/google_maps_intro.asp and https://developers.google.com/maps/documentation/javascript/adding-a-google-map-->
+	<div id="map" style="width:100%;height:400px;"></div>
+	<script>
+	function myMap() {
+	   // Setting the center position (and marker at TCD)
+	   var myCenter = new google.maps.LatLng(53.3438,-6.2546);
+	   var mapCanvas = document.getElementById("map");
+	   var mapOptions = {center: myCenter, zoom: 8};
+	   var map = new google.maps.Map(mapCanvas,mapOptions);
+	   var marker = new google.maps.Marker({position:myCenter});
+	   marker.setMap(map);
+	};
+	</script> 
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxBlIrPB6Cruhy5JHyTQO78wXKHiIj_mo&callback=myMap">
+	</script>
+ 
+    
+<!--Inserting space between map and stats-->
+        <section>
+        <p></p></section>
+    <div class="left">
+        <p> Input statistics here </p>
+        </div>
+        <div class="right">
+        <p> More stats/graphs etc. here</p></div>
+    </div>
+</body>
+</html>
