@@ -8,6 +8,6 @@ setup(name='dublin_bikes',
       license = 'GNU',
       packages = ['dublin_bikes'],
       entry_points = {
-          'console_scripts': ['scraper=dublin_bikes.scraper:scraper']
+          'console_scripts': ['scraper=dublin_bikes.scraper:run_scraper']
           }
       )
