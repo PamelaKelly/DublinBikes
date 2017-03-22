@@ -1,6 +1,5 @@
 import requests
 import json
-from pprint import pprint
 import time
 import datetime
 
@@ -15,14 +14,11 @@ def run_scraper():
     APIKEY = fh.readline().strip()
     NAME = "Dublin"
     URI = "https://api.jcdecaux.com/vls/v1/stations"
-    i = 0
     print(time.time())
     while True:
+        timestamp = time.time()
+        dt = datetime_formatter(timestamp)
         r = requests.get(URI, params={"apiKey": APIKEY, "contract": NAME})
-        pprint(json.loads(r.text))
-        with open('db-data' + str(i) + '.txt', 'w') as outfile:
+        with open('db-data' + dt + '.txt', 'w') as outfile:
             json.dump(r.text, outfile)
-        i += 1
         time.sleep(300)
-    
-    pprint(json.loads(r.text))
