@@ -18,6 +18,7 @@ i = 0
 print(time.time())
 while True:
     r = requests.get(URI, params={"apiKey": APIKEY, "contract": NAME})
+    pprint(json.loads(r.text))
     with open('db-data' + str(i) + '.txt', 'w') as outfile:
         json.dump(r.text, outfile)
     i += 1
