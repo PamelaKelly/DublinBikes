@@ -1,10 +1,11 @@
 """Scraper Tests"""
-from dublin_bikes import scraper
+from dublin_bikes import *
 import time
+import unittest
 
 def test_datetime_formatter(timestamp, correct_date):
     try:
-        str_dt = datetime_formatter(timestamp)
+        str_dt = scraper.datetime_formatter(timestamp)
         dt_split = str_dt.split()
         if dt_split[0] == correct_date:
             print("You have converted to the correct date")

@@ -8,6 +8,7 @@ import traceback
 import glob
 import os
 from pprint import pprint
+import pymysql.cursors
 #from IPython.display import display - not working
 
 #helper function to deal with datetime
@@ -39,11 +40,46 @@ def connect_db():
         file = "db_password.txt"
         fh = open(file)
         PASSWORD = fh.readline().strip()
-        engine = create_engine("mysql+mysqldb://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo = True)
-        res = engine.execute()
-        print(res.fetchall())
+        engine = sqla.create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo = True)
+        #connection = engine.connect()
+        #result = connection.execute()
+        result = engine.execute("Select *")
+        print(result.fetchall())
     except Exception as e:
         print("Error Type: ",  type(e))
         print("Error Details: ",  e)
         
-connect_db()
+def connect_db_2():
+
+    #connection to the db
+    file = "db_password.txt"
+    fh = open(file)
+    PASSWORD = fh.readline().strip()
+    connection = pymysql.connect(host = 'dublinbikeprojectdb.cun91scffwzf.eu-west-1.rds.amazonaws.com', 
+                                     user = 'theForkAwakens',
+                                     password = PASSWORD, 
+                                     db='DublinBikeProjectDB',
+                                     charset='utf8mb4',
+                                     cursorclass=pymysql.cursors.DictCursor)
+    """
+        #example of writing to the db
+        with connection.cursor() as cursor:
+            #create a new record
+            sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
+            cursor.execute(sql, ('example@email.com', 'secret-password'))
+            
+        #connection is not autocommit by default so you must commit to 
+        #save your changes
+        connection.commit()
+    """
+    try:
+        with connection.cursor() as cursor:
+            #read a single record
+            sql = "SELECT *"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            print(result)
+    finally:    
+        connection.close()
+        
+connect_db_2()
