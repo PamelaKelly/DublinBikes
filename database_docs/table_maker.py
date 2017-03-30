@@ -1,4 +1,4 @@
-import pymysql3 as pymysql
+import pymysql 
 
 def make_db_tables():
     try:
@@ -6,7 +6,7 @@ def make_db_tables():
         file = "dbPassword.txt"
         fh = open(file)
         PASSWORD = fh.readline().strip()
-        conn=pymysql.connect(host="dublinbikeprojectdb.cun91scffwzf.eu-west-1.rds.amazonaws.com",
+        conn=pymysql.connect(host="dublinbikeprojectdb.cun91scffwzf.eu-west-1.rds.amazonaws.com:3306",
                              user="theForkAwakens",password= PASSWORD, db= 'DublinBikeProjectDB',
                              charset= "utf8mb4", 
                              cursorclass=pymysql.cursors.DictCursor)
@@ -28,3 +28,4 @@ def make_db_tables():
         conn.close()
 
 
+make_db_tables()
