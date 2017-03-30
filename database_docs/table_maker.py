@@ -13,8 +13,9 @@ def make_db_tables():
         with conn.cursor() as cursor:
             #use database and create new record
             #create static data table
-            sql = """CREATE TABLE bike_stations
-            (station_number INT NOT NULL,station_name VARCHAR(45) NOT NULL,
+            sql = """CREATE TABLE IF NOT EXISTS bike_stations
+            (station_number INT NOT NULL, 
+            station_name VARCHAR(45) NOT NULL,
             station_address VARCHAR(45) NOT NULL, 
             station_location FLOAT NOT NULL, 
             banking_available TINYINT(1) NOT NULL, 
@@ -27,8 +28,17 @@ def make_db_tables():
 
         #create dynamic data table
         with conn.cursor() as cursor:
-            sql = "CREATE TABLE availability(station_number INT NOT NULL, bike_stands INT NOT NULL,bike_stands_available INT NOT NULL,bikes_available INT NOT NULL,last_updated TIMESTAMP () NOTNULL, PRIMARY KEY (station_number),FOREIGN KEY (station_number) REFERENCES bike_stations(station_number)"
+            sql = """CREATE TABLE IF NOT EXISTS availability
+            (station_number INT NOT NULL, 
+            bike_stands INT NOT NULL, 
+            bike_stands_available INT NOT NULL, 
+            bikes_available INT NOT NULL, 
+            last_updated TIMESTAMP NOT NULL, 
+            PRIMARY KEY (station_number, last_updated), 
+            FOREIGN KEY (station_number) REFERENCES bike_stations(station_number));"""
             cursor.execute(sql)
         conn.commit()
     finally:
         conn.close()
+        
+make_db_tables()
