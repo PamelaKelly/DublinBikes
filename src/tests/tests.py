@@ -24,6 +24,12 @@ test_datetime_formatter(timestamp, ['11', '59'])
 ######################################################
 """Database Tests"""
 
+#testing entering values into the db with binding sql params
+t1 = 'bike_stations'
+t22 = 'availability'
+values1 = (1244324244, "Trinity", "Trinity Street", 12321.11231, 1, 1)
+values2 = (1244324244, 20, 15, 5, 1490996938)
+
 ######################################################
 """Flask Tests"""
 
