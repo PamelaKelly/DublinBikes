@@ -41,4 +41,4 @@ def make_db_tables():
     finally:
         conn.close()
         
-make_db_tables()
+#make_db_tables()
