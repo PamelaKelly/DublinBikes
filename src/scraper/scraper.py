@@ -24,16 +24,26 @@ def write_to_file(r, dt):
     
 
 def write_to_db():
-    
-        #example of writing to the db
-        with connection.cursor() as cursor:
-            #create a new record
-            sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
-            cursor.execute(sql, ('example@email.com', 'secret-password'))
-            
-        #connection is not autocommit by default so you must commit to 
-        #save your changes
-        connection.commit()
+    try:
+        URI = "DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com"
+        PORT = "3306"
+        DB = "DublinBikeProjectDB"
+        USER = "theForkAwakens"
+        file = "db_password.txt"
+        fh = open(file)
+        PASSWORD = fh.readline().strip()
+        engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo = True)
+        sql = """INSERT INTO `bike_stations` 
+        (`station_number`, `station_name`, `station_address`, 
+        `station_location`, `banking_available`, `bonus`)
+        VALUES (1244324234, "Trinity", "Trinity Street", 
+        12321.11231, 1, 1);
+        """
+        res = engine.execute(sql)
+        print(res.fetchall())
+    except Exception as e:
+        print("Error Type: ", type(e))
+        print("Error Details: ", e)  
 
 def run_scraper():
     file = "db-apikey.txt"
@@ -51,27 +61,21 @@ def run_scraper():
         time.sleep(300)
         
 def connect_db():
-
-    #connection to the db
-    file = "db_password.txt"
-    fh = open(file)
-    PASSWORD = fh.readline().strip()
-    connection = pymysql.connect(host = 'dublinbikeprojectdb.cun91scffwzf.eu-west-1.rds.amazonaws.com', 
-                                     user = 'theForkAwakens',
-                                     password = PASSWORD, 
-                                     db='DublinBikeProjectDB',
-                                     charset='utf8mb4',
-                                     cursorclass=pymysql.cursors.DictCursor)
-
     try:
-        with connection.cursor() as cursor:
-            #read a single record
-            sql = "SELECT * FROM bike_stations;"
-            cursor.execute(sql)
-            result = cursor.fetchall()
-            print(result)
-    finally:    
-        connection.close()
+        URI = "DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com"
+        PORT = "3306"
+        DB = "DublinBikeProjectDB"
+        USER = "theForkAwakens"
+        file = "db_password.txt"
+        fh = open(file)
+        PASSWORD = fh.readline().strip()
+        engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo = True)
+        res = engine.execute("SELECT * FROM bike_stations")
+        print(res.fetchall())
+    except Exception as e:
+        print("Error Type: ", type(e))
+        print("Error Details: ", e)
         
 connect_db()
+
         
