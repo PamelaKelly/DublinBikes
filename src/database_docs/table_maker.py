@@ -29,7 +29,7 @@ def make_db_tables():
     except Exception as e:
         print("Error Type: ",  type(e))
         print("Error Details: ", e)
-
+#the function to change the table / db via code and not through workbench
 def alter_table():
     engine = scraper.connect_db()    
     try: 
