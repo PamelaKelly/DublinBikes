@@ -33,7 +33,7 @@ def make_db_tables():
 def alter_table():
     engine = scraper.connect_db()    
     try: 
-        sql = "ALTER TABLE bike_Station station_location station_loc_lat FLOAT NOT NULL;"
+        sql = "ALTER TABLE bike_Station CHANGE station_location station_loc_lat FLOAT NOT NULL;"
         engine.execute(sql)
         sql2 = "ALTER TABLE bike_Station ADD COLUMN station_loc_long AFTER station_loc_lat;"
         engine.execute(sql2)
