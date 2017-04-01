@@ -1,4 +1,4 @@
-from scraper import scraper
+from src.scraper import scraper
 
 def make_db_tables():
     #connect to db
@@ -33,13 +33,15 @@ def make_db_tables():
 def alter_table():
     engine = scraper.connect_db()    
     try: 
-        sql = "ALTER TABLE availability MODIFY COLUMN last_updated INT(11);"
+        sql = "ALTER TABLE bike_Station station_location station_loc_lat FLOAT NOT NULL;"
         engine.execute(sql)
-        sql2 = "DESCRIBE availability;"
-        res = engine.execute(sql2)
+        sql2 = "ALTER TABLE bike_Station ADD COLUMN station_loc_long AFTER station_loc_lat;"
+        engine.execute(sql2)
+        sql3 = "DESCRIBE availability;"
+        res = engine.execute(sql3)
         print(res.fetchall())
     except:
-        print("No No No")
+        print("NoooOOOooo")
 
-make_db_tables()
 
+alter_table()
