@@ -1,5 +1,5 @@
 """Scraper Tests"""
-from dublin_bikes import *
+from scraper import scraper
 import time
 import unittest
 

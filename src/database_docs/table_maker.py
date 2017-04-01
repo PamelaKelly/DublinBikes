@@ -1,4 +1,4 @@
-from src.scraper import scraper
+from scraper import scraper
 
 def make_db_tables():
     #connect to db
@@ -10,7 +10,8 @@ def make_db_tables():
             (station_number INT NOT NULL, 
             station_name VARCHAR(45) NOT NULL,
             station_address VARCHAR(45) NOT NULL, 
-            station_location FLOAT NOT NULL, 
+            station_loc_lat FLOAT NOT NULL,
+            station_loc_long FLOAT NOT NULL, 
             banking_available TINYINT(1) NOT NULL, 
             bonus TINYINT(1), 
             PRIMARY KEY (station_number));"""
@@ -29,19 +30,27 @@ def make_db_tables():
     except Exception as e:
         print("Error Type: ",  type(e))
         print("Error Details: ", e)
+
 #the function to change the table / db via code and not through workbench
 def alter_table():
     engine = scraper.connect_db()    
     try: 
-        sql = "ALTER TABLE bike_Station CHANGE station_location station_loc_lat FLOAT NOT NULL;"
+        sql = "ALTER TABLE bike_stations CHANGE station_location station_loc_lat FLOAT NOT NULL;"
         engine.execute(sql)
-        sql2 = "ALTER TABLE bike_Station ADD COLUMN station_loc_long AFTER station_loc_lat;"
+        sql2 = "ALTER TABLE bike_stations ADD COLUMN station_loc_long FLOAT NOT NULL AFTER station_loc_lat;"
         engine.execute(sql2)
         sql3 = "DESCRIBE availability;"
         res = engine.execute(sql3)
         print(res.fetchall())
     except:
         print("NoooOOOooo")
-
-
-alter_table()
+        
+def alter_column_datatype(table, column, data_type):
+    """ Function to edit data types in database.."""
+    engine = scraper.connect_db()    
+    try: 
+        sql = "ALTER TABLE %s MODIFY COLUMN %s %s;"
+        engine.execute(sql, (table, column, data_type))
+    except Exception as e:
+        print("Error type: ", type(e))
+        print("Error details: ", e)

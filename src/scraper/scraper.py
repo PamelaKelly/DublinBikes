@@ -9,16 +9,31 @@ import calendar
 
 #Need to make connection to db once and store connection in global object? - name of library? 
 
+class station:
+    def __init__(self, data):
+        self.station_number = data[0]
+        self.station_name = data[1]
+        self.station_address = data[2]
+    
+
 #helper function to deal with datetime
 def datetime_formatter(timestamp):
     dt = datetime.datetime.fromtimestamp(timestamp).strftime('%Y_%m_%d_%H_%M_%S')
     return dt
 
-def write_to_file(r, dt):
+def write_to_file(r):
     """Writes to backup file in json format"""
+    timestamp = time.time()
+    dt = datetime_formatter(timestamp)
     with open('db_data_' + dt + '.txt', 'w') as outfile:
         json.dump(json.JSONDecoder().decode(r.text), outfile)
 
+def parse_json_data(response):
+    data = json.JSONDecoder().decode(response.text)
+    static_data = ()
+    dynamic_data = ()
+    return static_data, dynamic_data
+    
 def connect_db():
     try:
         URI = "DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com"
@@ -68,19 +83,33 @@ def write_to_db(table, values):
         print("Error Type: ", type(e))
         print("Error Details: ", e)  
 
-def run_scraper():
-    """Scrapes the dublin bikes api for json data"""
+def get_data():
     file = "db-apikey.txt"
     #file = "/home/ubuntu/anaconda3/envs/TheForkAwakens/db-apikey.txt"
     fh = open(file)
     APIKEY = fh.readline().strip()
     NAME = "Dublin"
     URI = "https://api.jcdecaux.com/vls/v1/stations"
+    r = requests.get(URI, params={"apiKey": APIKEY, "contract": NAME})
+    return r
+
+def run_scraper():
+    """Scrapes the dublin bikes api for json data"""
     while True:
-        timestamp = time.time()
-        dt = datetime_formatter(timestamp)
-        r = requests.get(URI, params={"apiKey": APIKEY, "contract": NAME})
-        #write_to_db(r)
-        write_to_file(r, dt)
+        r = get_data()
+        #parse_json_data(r)
+        #write_to_db(table, values)
+        write_to_file(r)
         time.sleep(300)
 
+def parse_test(): 
+    file = "db-apikey.txt"
+    fh = open(file)
+    APIKEY = fh.readline().strip()
+    NAME = "Dublin"
+    URI = "https://api.jcdecaux.com/vls/v1/stations"
+    r = requests.get(URI, params={"apiKey": APIKEY, "contract": NAME})
+    data = json.JSONDecoder().decode(r.text)
+    
+    
+parse_test()
