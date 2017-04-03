@@ -10,6 +10,35 @@ from sqlalchemy.dialects.mssql.base import TINYINT
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.mysql.types import FLOAT, VARCHAR, TIMESTAMP
 
+Base = declarative_base()
+
+class weather(Base):
+    __tablename__ = 'weather_data'
+    
+    date_time = Column(FLOAT, primary_key = True, nullable = False)
+    temp = Column(FLOAT, nullable = False)
+    temp_max = Column(FLOAT, nullable = False)
+    temp_min = Column(FLOAT, nullable = False)
+    humidity = Column(int, nullable = False)
+    main = Column(VARCHAR(45), nullable = False)
+    weather_description = Column(VARCHAR(45), nullable = False)
+    windspeed= Column(int, nullable = False)
+    
+    def __repr__(self):
+        return """
+        <Weather=(weather_data=%s, 
+        date_time='%s',
+        temp='%s',
+        temp_max=%s,
+        temp_min=%s,
+        humidity=%s,
+        main=%s,
+        weather_description=%s,
+        windspeed=%s)>""" % (self.date_time, self.temp, 
+                         self.temp_max, self.temp_min,
+                         self.humidity, self.main,
+                         self.weather_description, self.windspeed)
+
 def connect_weather_db():
     """Connects to the database"""
     try:
