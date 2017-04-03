@@ -10,7 +10,7 @@ from sqlalchemy.dialects.mssql.base import TINYINT
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.mysql.types import FLOAT, VARCHAR, TIMESTAMP
 
-def connect_db():
+def connect_weather_db():
     """Connects to the database"""
     try:
         URI = "weatherdb.cnmhll8wqxlt.us-west-2.rds.amazonaws.com"
@@ -28,7 +28,7 @@ def connect_db():
 
 
 
-def get_data():
+def get_weather_data():
     """Sends the request to the open weather API and returns a json file"""
     file = "weather_api_key.txt"
     fh = open(file)
