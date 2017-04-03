@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mssql.base import TINYINT
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.dialects.mysql.types import FLOAT, VARCHAR
+from sqlalchemy.dialects.mysql.types import FLOAT, VARCHAR, TIMESTAMP
 #from IPython.display import display - not working
 
 #Need to make connection to db once and store connection in global object? - name of library? 
@@ -64,17 +64,20 @@ class Station_Dynamic(Base):
     
 
 
-def datetime_formatter(timestamp):
+def datetime_formatter(info):
     """Takes the current time and returns the date, time and day of the week"""
-    dt = datetime.datetime.fromtimestamp(timestamp).strftime('%Y_%m_%d_%H_%M_%S')
-    day = datetime.datetime.fromtimestamp(timestamp).strftime('%a')
-    return dt, day
+    if type(info) == float:
+        dt = datetime.datetime.fromtimestamp(info).strftime('%Y-%m-%d %H-%M-%S')
+        day = datetime.datetime.fromtimestamp(info).strftime('%a')
+        return dt, day
+    elif type(info) == str:
+        return day_from_filename(info)
 
         
 def write_to_file(data):
     """Stores json data in a file with date and time as part of filename"""
-    dt = datetime_formatter(time.time())
-    with open('db_data_' + dt + '.txt', 'w') as outfile:
+    dt = datetime_formatter(time.time())[0]
+    with open('db-data-' + dt + '.txt', 'w') as outfile:
         json.dump(data, outfile)
     
 def connect_db():
@@ -93,9 +96,10 @@ def connect_db():
         print("Error Type: ", type(e))
         print("Error Details: ", e)    
 
-def write_to_db(data):
+def write_to_db(data, id):
     """Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
-    day = datetime_formatter(time.time())[1]
+    day = datetime_formatter(id)[1] # approach doesn't work for writing from file to db
+    
     engine = connect_db()
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -122,7 +126,7 @@ def write_to_db(data):
                                               last_updated = i["last_update"], 
                                               day = day)
             
-            session.add_all(station, station_dynamic)
+            session.add_all([station, station_dynamic])
             session.commit()   
         
     except Exception as e:
@@ -130,15 +134,16 @@ def write_to_db(data):
         print("Error Details: ", e)  
 
 def file_to_db(file):
+    print(file)
     """ Helper function to write data from file to database"""
     try:
         with open(file, 'r') as obj:
             data = json.load(obj)
-        write_to_db(data)
+        write_to_db(data, file)
     except Exception as e:
         print("Error Type: ", type(e))
         print("Error Details: ", e)
-        
+      
 def multiple_files_to_db():
     try:       
         for file in os.listdir(os.getcwd()):
@@ -164,6 +169,18 @@ def run_scraper():
     while True:
         data = get_data()
         write_to_file(data)
-        write_to_db(data)
+        write_to_db(data, time.time())
         time.sleep(300)
-         
+
+def day_from_filename(filename):
+    word = filename.split()
+    date = word[0][7:]
+    new_date = ""
+    if date[5:7] == '04':
+        month = 'April'
+    elif date[5:7] == '03':
+        month = 'March'
+    new_date += (month + " " + date[8:] + ", " + date[:4])
+    day = datetime.datetime.strptime(new_date, '%B %d, %Y').strftime('%a')
+    return day
+
