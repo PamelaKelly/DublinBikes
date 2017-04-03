@@ -2,6 +2,7 @@ import requests
 import json
 import time
 import datetime
+import os
 import sqlalchemy
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -106,19 +107,19 @@ def write_to_db(data):
             #don't actually need to instantiate object here - could use session.add_all directly but choosing
             #to do it this way for readability
             
-            station = Station(station_number = i['number'],
-                          station_name = i['name'], 
-                          station_address = i['address'], 
-                          station_loc_lat = i['position']['lat'],
-                          station_loc_long = i['position']['lng'],
+            station = Station(station_number = i["number"],
+                          station_name = i["name"], 
+                          station_address = i["address"], 
+                          station_loc_lat = i["position"]["lat"],
+                          station_loc_long = i["position"]["lng"],
                           banking_available = banking,
                           bonus = bonus)
             
-            station_dynamic = Station_Dynamic(station_number = i['number'],
-                                              bike_stands = i['bike_stands'], 
-                                              bike_stands_available = i['available_bike_stands'],
-                                              bikes_available = i['available_bikes'],
-                                              last_updated = i['last_update'], 
+            station_dynamic = Station_Dynamic(station_number = i["number"],
+                                              bike_stands = i["bike_stands"], 
+                                              bike_stands_available = i["available_bike_stands"],
+                                              bikes_available = i["available_bikes"],
+                                              last_updated = i["last_update"], 
                                               day = day)
             
             session.add_all(station, station_dynamic)
@@ -127,6 +128,25 @@ def write_to_db(data):
     except Exception as e:
         print("Error Type: ", type(e))
         print("Error Details: ", e)  
+
+def file_to_db(file):
+    """ Helper function to write data from file to database"""
+    try:
+        with open(file, 'r') as obj:
+            data = json.load(obj)
+        write_to_db(data)
+    except Exception as e:
+        print("Error Type: ", type(e))
+        print("Error Details: ", e)
+        
+def multiple_files_to_db():
+    try:       
+        for file in os.listdir(os.getcwd()):
+            if file.endswith(".txt"):
+                file_to_db(file)
+    except Exception as e:
+        print("Error Type: ", type(e))
+        print("Error Details: ", e)
 
 def get_data():
     """Sends the request to the Dublin bikes API and returns a json file"""
@@ -146,4 +166,4 @@ def run_scraper():
         write_to_file(data)
         write_to_db(data)
         time.sleep(300)
-
+         
