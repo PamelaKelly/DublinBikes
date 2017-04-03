@@ -3,7 +3,7 @@
 
 from flask import Flask
 from flask import jsonify
-from src.scraper import scraper
+from scraper import scraper
 
 app = Flask(__name__)
 
