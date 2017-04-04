@@ -1,4 +1,4 @@
-from scraper import scraper
+from src.scraper import scraper
 
 def make_db_tables():
     #connect to db
