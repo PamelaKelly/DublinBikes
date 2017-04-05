@@ -73,7 +73,8 @@ def write_to_weather_db(data):
                         windspeed = data.wind.speed)
             
         session.add_all([weather])
-        session.commit()   
+        session.commit()
+        session.close()   
         
     except Exception as e:
         print("Error Type: ", type(e))
@@ -91,8 +92,16 @@ def get_weather_data():
     data = json.JSONDecoder().decode(r.text)
     return data
 
-def run_weather_data():
-    print(get_weather_data())
+def run_weather_scraper():
+    try:
+        while True:
+            data = get_weather_data()
+            write_to_weather_db(data)
+            time.sleep(1800)
+    except Exception as e:
+        print("Error Type: ", type(e))
+        print("Error Details: ", e)
+        
 
 
 '''
