@@ -56,7 +56,7 @@ def connect_weather_db():
         print("Error Details: ", e)    
 
 
-def write_to_weather_db(data, id):
+def write_to_weather_db(data):
     """Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
     
     engine = connect_weather_db()
@@ -88,7 +88,7 @@ def file_to_weather_db(file):
     try:
         with open(file, 'r') as obj:
             data = json.load(obj)
-        write_to_weather_db(data, file)
+        write_to_weather_db(data)
     except Exception as e:
         print("Error Type: ", type(e))
         print("Error Details: ", e)
