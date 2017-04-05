@@ -9,10 +9,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mssql.base import TINYINT
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.mysql.types import FLOAT, VARCHAR, TIMESTAMP
+import sys
 #from IPython.display import display - not working
 
 #Need to make connection to db once and store connection in global object? - name of library? 
-entry_id = 1
+
 Base = declarative_base()
 
 class Station(Base):
@@ -42,13 +43,13 @@ class Station(Base):
 class Station_Dynamic(Base):
     __tablename__ = 'availability'
     
-    station_number = Column(Integer, nullable = False)
+    station_number = Column(Integer, primary_key = True, nullable = False)
     bike_stands = Column(Integer, nullable = False)
     bike_stands_available = Column(Integer, nullable = False)
     bikes_available = Column(Integer, nullable = False)
-    last_updated = Column(Integer, nullable = False)
-    day = Column(VARCHAR, nullable = False,
-	entry_id = Column(Integer, primary_key = True, nullable = False))
+    last_updated = Column(Integer, primary_key = True, nullable = False)
+    day = Column(VARCHAR, nullable = False)
+	
     
     def __repr__(self):
         return """
@@ -59,7 +60,7 @@ class Station_Dynamic(Base):
         last_updated=%s, 
         day = %s)>""" % (self.station_number, self.bike_stands,
                                 self.bike_stands_available, self.bikes_available,
-                                self.last_updated, self.day, self.entry_id)
+                                self.last_updated, self.day)
         
     
     
@@ -124,9 +125,25 @@ def write_to_stations(data):
 	except Exception as e:
 		print("Error Type: ", type(e))
 		print("Error Details: ", e)
+
+def write_to_availability_basic(data, filename):
+	engine = connect_db()
+	day = datetime_formatter(filename)
+	
+	for i in data:
+		station_number = i["number"]
+		bike_stands = i["bike_stands"]
+		bike_stands_available = i["available_bike_stands"]
+		bikes_available = i["available_bikes"]
+		last_updated = i["last_update"]
+		day = day
+		
+		sql_insert = "INSERT INTO availability (station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day) VALUES (%d, %d, %d, %d, %d, %s)"
+		print("pam_ INSERT INTO availability (station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day) VALUES (%d, %d, %d, %d, %d, %s)",station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day)
+		engine.execute(sql_insert, station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day)
+	
 		
 def write_to_availability(data, filename):
-	global entry_id
 	engine = connect_db()
 	Session = sessionmaker(bind=engine)
 	session = Session()
@@ -134,14 +151,12 @@ def write_to_availability(data, filename):
 	
 	try:
 		for i in data:
-			entry_id += 1
-			station_dynamic = Station_Dynamic(station_number = i["number"],
-									bike_stands = i["bike_stands"], 
-									bike_stands_available = i["available_bike_stands"],
-									bikes_available = i["available_bikes"],
-									last_updated = i["last_update"], 
-									day = day, 
-									entry_id = entry_id)
+			station_dynamic = Station_Dynamic(station_number = int(i["number"]),
+									bike_stands = int(i["bike_stands"]), 
+									bike_stands_available = int(i["available_bike_stands"]),
+									bikes_available = int(i["available_bikes"]),
+									last_updated = int(i["last_update"]), 
+									day = day)
 									
 			print("station_dynamic...", station_dynamic)
 			session.add(station_dynamic)
@@ -151,6 +166,7 @@ def write_to_availability(data, filename):
 	except Exception as e:
 		print("Error type: ", type(e))
 		print("Error details: ", e)
+		sys.exit()
 			
 def write_to_db(data, id):
 	"""Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
@@ -191,6 +207,7 @@ def write_to_db(data, id):
 	except Exception as e:
 		print("Error Type: ", type(e))
 		print("Error Details: ", e)  
+		raise
 
 def file_to_db(file):
 	print(file)
