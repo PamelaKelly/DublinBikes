@@ -12,7 +12,7 @@ from sqlalchemy.dialects.mysql.types import FLOAT, VARCHAR, TIMESTAMP
 #from IPython.display import display - not working
 
 #Need to make connection to db once and store connection in global object? - name of library? 
-
+entry_id = 1
 Base = declarative_base()
 
 class Station(Base):
@@ -42,12 +42,13 @@ class Station(Base):
 class Station_Dynamic(Base):
     __tablename__ = 'availability'
     
-    station_number = Column(Integer, primary_key = True, nullable = False)
+    station_number = Column(Integer, nullable = False)
     bike_stands = Column(Integer, nullable = False)
     bike_stands_available = Column(Integer, nullable = False)
     bikes_available = Column(Integer, nullable = False)
-    last_updated = Column(Integer, primary_key = True, nullable = False)
-    day = Column(VARCHAR, nullable = False)
+    last_updated = Column(Integer, nullable = False)
+    day = Column(VARCHAR, nullable = False,
+	entry_id = Column(Integer, primary_key = True, nullable = False))
     
     def __repr__(self):
         return """
@@ -58,7 +59,7 @@ class Station_Dynamic(Base):
         last_updated=%s, 
         day = %s)>""" % (self.station_number, self.bike_stands,
                                 self.bike_stands_available, self.bikes_available,
-                                self.last_updated, self.day)
+                                self.last_updated, self.day, self.entry_id)
         
     
     
@@ -125,6 +126,7 @@ def write_to_stations(data):
 		print("Error Details: ", e)
 		
 def write_to_availability(data, filename):
+	global entry_id
 	engine = connect_db()
 	Session = sessionmaker(bind=engine)
 	session = Session()
@@ -132,12 +134,14 @@ def write_to_availability(data, filename):
 	
 	try:
 		for i in data:
+			entry_id += 1
 			station_dynamic = Station_Dynamic(station_number = i["number"],
 									bike_stands = i["bike_stands"], 
 									bike_stands_available = i["available_bike_stands"],
 									bikes_available = i["available_bikes"],
 									last_updated = i["last_update"], 
-									day = day)
+									day = day, 
+									entry_id = entry_id)
 									
 			print("station_dynamic...", station_dynamic)
 			session.add(station_dynamic)
