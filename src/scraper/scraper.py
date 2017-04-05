@@ -87,62 +87,118 @@ def connect_db():
         PORT = "3306"
         DB = "DublinBikeProjectDB"
         USER = "theForkAwakens"
-        file = "db_password.txt"
+        file = "../Assignment4-P-E-K/src/scraper/db_password.txt"
         fh = open(file)
         PASSWORD = fh.readline().strip()
         engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo = True)
         return engine
     except Exception as e:
         print("Error Type: ", type(e))
-        print("Error Details: ", e)    
+        print("Error Details: ", e)   
 
+def write_to_stations(data):
+	engine = connect_db()
+	Session = sessionmaker(bind=engine)
+	session = Session()
+	
+	try:
+		for i in data:
+			print("i is equal to ", i)
+			banking = 1 if (i['banking']) else 0
+			bonus =1 if (i['bonus']) else 0
+			
+			station = Station(station_number = i["number"],
+									station_name = i["name"], 
+									station_address = i["address"], 
+									station_loc_lat = i["position"]["lat"],
+									station_loc_long = i["position"]["lng"],
+									banking_available = banking,
+									bonus = bonus)
+									
+			print("station...", station)
+			session.add(station)
+			session.commit()
+		session.close()
+		
+	except Exception as e:
+		print("Error Type: ", type(e))
+		print("Error Details: ", e)
+		
+def write_to_availability(data, filename):
+	engine = connect_db()
+	Session = sessionmaker(bind=engine)
+	session = Session()
+	day = datetime_formatter(filename)
+	
+	try:
+		for i in data:
+			station_dynamic = Station_Dynamic(station_number = i["number"],
+									bike_stands = i["bike_stands"], 
+									bike_stands_available = i["available_bike_stands"],
+									bikes_available = i["available_bikes"],
+									last_updated = i["last_update"], 
+									day = day)
+									
+			print("station_dynamic...", station_dynamic)
+			session.add(station_dynamic)
+			session.commit()
+		session.close()
+			
+	except Exception as e:
+		print("Error type: ", type(e))
+		print("Error details: ", e)
+			
 def write_to_db(data, id):
-    """Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
-    day = datetime_formatter(id)[1] # approach doesn't work for writing from file to db
-    
-    engine = connect_db()
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    try:
-        for i in data:
-            banking = 1 if (data[0]['banking']) else 0
-            bonus = 1 if (data[0]['bonus']) else 0
-                
-            #don't actually need to instantiate object here - could use session.add_all directly but choosing
-            #to do it this way for readability
-            
-            station = Station(station_number = i["number"],
-                          station_name = i["name"], 
-                          station_address = i["address"], 
-                          station_loc_lat = i["position"]["lat"],
-                          station_loc_long = i["position"]["lng"],
-                          banking_available = banking,
-                          bonus = bonus)
-            
-            station_dynamic = Station_Dynamic(station_number = i["number"],
-                                              bike_stands = i["bike_stands"], 
-                                              bike_stands_available = i["available_bike_stands"],
-                                              bikes_available = i["available_bikes"],
-                                              last_updated = i["last_update"], 
-                                              day = day)
-            
-            session.add_all([station, station_dynamic])
-            session.commit()   
-        
-    except Exception as e:
-        print("Error Type: ", type(e))
-        print("Error Details: ", e)  
+	"""Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
+	day = datetime_formatter(id) # approach doesn't work for writing from file to db
+
+	engine = connect_db()
+	Session = sessionmaker(bind=engine)
+	session = Session()
+	try:
+		for i in data:
+			banking = 1 if (i['banking']) else 0
+			bonus = 1 if (i['bonus']) else 0
+
+			#don't actually need to instantiate object here - could use session.add_all directly but choosing
+			#to do it this way for readability
+
+			station = Station(station_number = i["number"],
+									station_name = i["name"], 
+									station_address = i["address"], 
+									station_loc_lat = i["position"]["lat"],
+									station_loc_long = i["position"]["lng"],
+									banking_available = banking,
+									bonus = bonus)
+
+			station_dynamic = Station_Dynamic(station_number = i["number"],
+									bike_stands = i["bike_stands"], 
+									bike_stands_available = i["available_bike_stands"],
+									bikes_available = i["available_bikes"],
+									last_updated = i["last_update"], 
+									day = day)
+
+			print("station...", station)
+			print("station_dynamic...", station_dynamic)
+			session.add_all([station, station_dynamic])
+			session.commit() 
+		session.close()
+
+	except Exception as e:
+		print("Error Type: ", type(e))
+		print("Error Details: ", e)  
 
 def file_to_db(file):
-    print(file)
-    """ Helper function to write data from file to database"""
-    try:
-        with open(file, 'r') as obj:
-            data = json.load(obj)
-        write_to_db(data, file)
-    except Exception as e:
-        print("Error Type: ", type(e))
-        print("Error Details: ", e)
+	print(file)
+	""" Helper function to write data from file to database"""
+	try:
+		with open(file, 'r') as obj:
+			dataStr = json.load(obj)
+			dataJson = json.loads(dataStr)
+		write_to_availability(dataJson, file)
+	except Exception as e:
+		print("Error Type: ", type(e))
+		print("Error Details: ", e)
       
 def multiple_files_to_db():
     try:       
@@ -155,7 +211,7 @@ def multiple_files_to_db():
 
 def get_data():
     """Sends the request to the Dublin bikes API and returns a json file"""
-    file = "db-apikey.txt"
+    file = "./Assignment4-P-E-K/src/scraper/db-apikey.txt"
     fh = open(file)
     APIKEY = fh.readline().strip()
     NAME = "Dublin"
@@ -184,3 +240,5 @@ def day_from_filename(filename):
     day = datetime.datetime.strptime(new_date, '%B %d, %Y').strftime('%a')
     return day
 
+
+multiple_files_to_db()

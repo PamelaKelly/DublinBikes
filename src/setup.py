@@ -6,7 +6,7 @@ setup(name='dublin_bikes',
       author = 'Pamela Kelly, Emma Byrne, Katherine Campbell',
       url='https://github.com/PamelaKelly/Assignment4-P-E-K',
       license = 'GNU',
-      packages = ['dublin_bikes'],
+      packages = ['scraper'],
       entry_points = {
           'console_scripts': [
               'scraper=scraper.scraper:run_scraper',
