@@ -12,7 +12,7 @@ from sqlalchemy.dialects.mysql.types import FLOAT, VARCHAR, TIMESTAMP
 #from IPython.display import display - not working
 
 #Need to make connection to db once and store connection in global object? - name of library? 
-
+entry_id = 1
 Base = declarative_base()
 
 class Station(Base):
@@ -42,12 +42,13 @@ class Station(Base):
 class Station_Dynamic(Base):
     __tablename__ = 'availability'
     
-    station_number = Column(Integer, primary_key = True, nullable = False)
+    station_number = Column(Integer, nullable = False)
     bike_stands = Column(Integer, nullable = False)
     bike_stands_available = Column(Integer, nullable = False)
     bikes_available = Column(Integer, nullable = False)
-    last_updated = Column(Integer, primary_key = True, nullable = False)
-    day = Column(VARCHAR, nullable = False)
+    last_updated = Column(Integer, nullable = False)
+    day = Column(VARCHAR, nullable = False,
+    entry_id = Column(Integer, primary_key = True, nullable = False))
     
     def __repr__(self):
         return """
@@ -56,9 +57,10 @@ class Station_Dynamic(Base):
         bike_stands_available=%s,
         bikes_available=%s,
         last_updated=%s, 
-        day = %s)>""" % (self.station_number, self.bike_stands,
+        day = %s,
+        entry_id = %s)>""" % (self.station_number, self.bike_stands,
                                 self.bike_stands_available, self.bikes_available,
-                                self.last_updated, self.day)
+                                self.last_updated, self.day, self.entry_id)
         
     
     
@@ -99,7 +101,9 @@ def connect_db():
 def write_to_db(data, id):
     """Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
     day = datetime_formatter(id)[1] # approach doesn't work for writing from file to db
-    
+    global entry_id
+    entry_id += 1
+    print(entry_id)
     engine = connect_db()
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -124,10 +128,11 @@ def write_to_db(data, id):
                                               bike_stands_available = i["available_bike_stands"],
                                               bikes_available = i["available_bikes"],
                                               last_updated = i["last_update"], 
-                                              day = day)
+                                              day = day,
+                                              entry_id = entry_id)
             
             session.add_all([station, station_dynamic])
-            session.commit()   
+            session.commit()
         
     except Exception as e:
         print("Error Type: ", type(e))
@@ -183,4 +188,3 @@ def day_from_filename(filename):
     new_date += (month + " " + date[8:] + ", " + date[:4])
     day = datetime.datetime.strptime(new_date, '%B %d, %Y').strftime('%a')
     return day
-
