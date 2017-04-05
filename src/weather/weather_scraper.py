@@ -56,6 +56,56 @@ def connect_weather_db():
         print("Error Details: ", e)    
 
 
+def write_to_weather_db(data, id):
+    """Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
+    
+    engine = connect_weather_db()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    try:
+        weather = weather( date_time = data.dt,
+                        temp = data.main.temp, 
+                        temp_max = data.main.temp_max, 
+                        temp_min = data.main.temp_min,
+                        humidity = data.main.humidity,
+                        main = data.weather[0].main,
+                        weather_description = data.weather[0].description,
+                        windspeed = data.wind.speed)
+            
+        session.add_all([weather])
+        session.commit()   
+        
+    except Exception as e:
+        print("Error Type: ", type(e))
+        print("Error Details: ", e)  
+
+
+
+
+def file_to_weather_db(file):
+    print(file)
+    """ function to write data from file to database"""
+    try:
+        with open(file, 'r') as obj:
+            data = json.load(obj)
+        write_to_weather_db(data, file)
+    except Exception as e:
+        print("Error Type: ", type(e))
+        print("Error Details: ", e)
+      
+
+
+def multiple_files_to_db():
+    try:       
+        for file in os.listdir(os.getcwd()):
+            if file.endswith(".txt"):
+                file_to_weather_db(file)
+    except Exception as e:
+        print("Error Type: ", type(e))
+        print("Error Details: ", e)
+
+
+
 
 def get_weather_data():
     """Sends the request to the open weather API and returns a json file"""
