@@ -105,8 +105,6 @@ def multiple_files_to_db():
         print("Error Details: ", e)
 
 
-
-
 def get_weather_data():
     """Sends the request to the open weather API and returns a json file"""
     file = "weather_api_key.txt"
