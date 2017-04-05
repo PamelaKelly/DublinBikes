@@ -19,10 +19,10 @@ class weather(Base):
     temp = Column(FLOAT, nullable = False)
     temp_max = Column(FLOAT, nullable = False)
     temp_min = Column(FLOAT, nullable = False)
-    humidity = Column(int, nullable = False)
+    humidity = Column(Integer, nullable = False)
     main = Column(VARCHAR(45), nullable = False)
     weather_description = Column(VARCHAR(45), nullable = False)
-    windspeed= Column(int, nullable = False)
+    windspeed= Column(Integer, nullable = False)
     
     def __repr__(self):
         return """
@@ -38,7 +38,7 @@ class weather(Base):
                          self.temp_max, self.temp_min,
                          self.humidity, self.main,
                          self.weather_description, self.windspeed)
-
+    
 def connect_weather_db():
     """Connects to the database"""
     try:
@@ -81,30 +81,6 @@ def write_to_weather_db(data):
 
 
 
-
-def file_to_weather_db(file):
-    print(file)
-    """ function to write data from file to database"""
-    try:
-        with open(file, 'r') as obj:
-            data = json.load(obj)
-        write_to_weather_db(data)
-    except Exception as e:
-        print("Error Type: ", type(e))
-        print("Error Details: ", e)
-      
-
-
-def multiple_files_to_db():
-    try:       
-        for file in os.listdir(os.getcwd()):
-            if file.endswith(".txt"):
-                file_to_weather_db(file)
-    except Exception as e:
-        print("Error Type: ", type(e))
-        print("Error Details: ", e)
-
-
 def get_weather_data():
     """Sends the request to the open weather API and returns a json file"""
     file = "weather_api_key.txt"
@@ -114,6 +90,9 @@ def get_weather_data():
     r = requests.get(URI, params={"apiKey": APIKEY})
     data = json.JSONDecoder().decode(r.text)
     return data
+
+def run_weather_data():
+    print(get_weather_data())
 
 
 '''
