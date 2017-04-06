@@ -22,22 +22,22 @@ class weather(Base):
     humidity = Column(Integer, nullable = False)
     main = Column(VARCHAR(45), nullable = False)
     weather_description = Column(VARCHAR(45), nullable = False)
-    windspeed= Column(Integer, nullable = False)
+    wind_speed= Column(Integer, nullable = False)
     
     def __repr__(self):
         return """
-        <Weather=(weather_data=%s, 
-        date_time='%s',
-        temp='%s',
-        temp_max=%s,
-        temp_min=%s,
-        humidity=%s,
-        main=%s,
-        weather_description=%s,
-        windspeed=%s)>""" % (self.date_time, self.temp, 
+        <Weather=(
+        date_time=%d,
+        temp=%d,
+        temp_max=%d,
+        temp_min=%d,
+        humidity=%d,
+        main=%d,
+        weather_description='%s',
+        wind_speed=%d)>""" % (self.date_time, self.temp, 
                          self.temp_max, self.temp_min,
                          self.humidity, self.main,
-                         self.weather_description, self.windspeed)
+                         self.weather_description, self.wind_speed)
     
 def connect_weather_db():
     """Connects to the database"""
@@ -57,41 +57,47 @@ def connect_weather_db():
 
 
 def write_to_weather_db(data):
-    """Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
-    
-    engine = connect_weather_db()
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    try:
-        weather = weather( date_time = data.dt,
-                        temp = data.main.temp, 
-                        temp_max = data.main.temp_max, 
-                        temp_min = data.main.temp_min,
-                        humidity = data.main.humidity,
-                        main = data.weather[0].main,
-                        weather_description = data.weather[0].description,
-                        windspeed = data.wind.speed)
-            
-        session.add_all([weather])
-        session.commit()
-        session.close()   
-        
-    except Exception as e:
-        print("Error Type: ", type(e))
-        print("Error Details: ", e)  
+	"""Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
+
+	engine = connect_weather_db()
+	Session = sessionmaker(bind=engine)
+	session = Session()
+	try:
+		weather_instance = weather(date_time = data["dt"],
+			temp = data["main"]["temp"], 
+			temp_max = data["main"]["temp_max"], 
+			temp_min = data["main"]["temp_min"],
+			humidity = data["main"]["humidity"],
+			main = data["weather"][0]["main"],
+			weather_description = data["weather"][0]["description"],
+			wind_speed = data["wind"]["speed"])
+
+		session.add(weather_instance)
+		session.commit()
+		session.close()   
+
+	except Exception as e:
+		print("in the write_to_weather_db function")
+		print("Error Type: ", type(e))
+		print("Error Details: ", e)  
 
 
 
 def get_weather_data():
-    """Sends the request to the open weather API and returns a json file"""
-    file = "weather_api_key.txt"
-    fh = open(file)
-    APIKEY = fh.readline().strip()
-    URI = "http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid="
-    r = requests.get(URI, params={"apiKey": APIKEY})
-    data = json.JSONDecoder().decode(r.text)
-    return data
-
+	"""Sends the request to the open weather API and returns a json file"""
+	try:
+		file = "weather_api_key.txt"
+		fh = open(file)
+		APIKEY = fh.readline().strip()
+		URI = "http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid="
+		r = requests.get(URI, params={"apiKey": APIKEY})
+		data = json.JSONDecoder().decode(r.text)
+		return data
+	except Exception as e:
+		print("in the get_weather_data")
+		print("Error type: ", type(e))
+		print("Error Details: ", e)
+	
 def run_weather_scraper():
     try:
         while True:
