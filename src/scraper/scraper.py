@@ -149,8 +149,8 @@ def write_to_availability(data, filename):
 	session = Session()
 	day = datetime_formatter(filename)
 	
-	try:
-		for i in data:
+	for i in data:
+		try:
 			station_dynamic = Station_Dynamic(station_number = int(i["number"]),
 									bike_stands = int(i["bike_stands"]), 
 									bike_stands_available = int(i["available_bike_stands"]),
@@ -161,12 +161,12 @@ def write_to_availability(data, filename):
 			print("station_dynamic...", station_dynamic)
 			session.add(station_dynamic)
 			session.commit()
-		session.close()
+			session.close()
 			
-	except Exception as e:
-		print("Error type: ", type(e))
-		print("Error details: ", e)
-		sys.exit()
+		except Exception as e:
+			print("Error type: ", type(e))
+			print("Error details: ", e)
+			continue
 			
 def write_to_db(data, id):
 	"""Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
