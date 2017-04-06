@@ -103,7 +103,7 @@ def run_weather_scraper():
         print("Error Details: ", e)
         
 
-
+run_weather_scraper()
 '''
 Created on Apr 3, 2017
 
