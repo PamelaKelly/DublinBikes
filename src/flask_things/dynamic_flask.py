@@ -5,8 +5,6 @@ from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='mysql://theForkAwakens:software4@DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com/db'
 db = SQLAlchemy(app)
