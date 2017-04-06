@@ -101,7 +101,6 @@ def run_weather_scraper():
     except Exception as e:
         print("Error Type: ", type(e))
         print("Error Details: ", e)
-        
 
 run_weather_scraper()
 '''
