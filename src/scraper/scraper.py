@@ -225,3 +225,5 @@ def day_from_filename(filename):
     day = datetime.datetime.strptime(new_date, '%B %d, %Y').strftime('%a')
     return day
 
+multiple_files_to_db()
+
