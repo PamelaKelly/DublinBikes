@@ -3,9 +3,10 @@ import flask
 import functools
 from flask import Flask
 from flask import jsonify
-from src.scraper import scraper
+#from src.scraper import scraper
+from scraper import scraper
 from main import Main
-from stations import Stations
+#from stations import Stations
 
 app = flask.Flask(__name__)
 
@@ -23,6 +24,7 @@ app = flask.Flask(__name__)
 @app.route("/")
 def get_stations():
     engine = scraper.connect_db()
+    print(type(engine))
     sql = "select * from bike_stations;"
     rows = engine.execute(sql).fetchall()
     print("#found {} stations", len(rows))
