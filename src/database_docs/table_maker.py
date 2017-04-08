@@ -54,5 +54,4 @@ def alter_column_datatype(table, column, data_type):
     except Exception as e:
         print("Error type: ", type(e))
         print("Error details: ", e)
-
-make_db_tables()
+        

@@ -146,11 +146,11 @@ def write_to_availability_basic(data, filename):
 
 def write_to_availability(data, filename):
     engine = connect_db()
-    Session = sessionmaker(bind=engine)
     #session = Session()
     day = datetime_formatter(filename)
     for i in data:
         try:
+            Session = sessionmaker(bind=engine)
             session = Session()
             station_dynamic = Station_Dynamic(station_number=int(i["number"]),
                                 bike_stands=int(i["bike_stands"]),
