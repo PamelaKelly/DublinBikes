@@ -89,8 +89,8 @@ def connect_db():
         PORT = "3306"
         DB = "DublinBikeProjectDB"
         USER = "theForkAwakens"
-        file = "db_password.txt"
-        # file = "../Assignment4-P-E-K/src/scraper/db_password.txt"
+        #file = "db_password.txt"
+        file = "../Assignment4-P-E-K/src/scraper/db_password.txt"
         fh = open(file)
         PASSWORD = fh.readline().strip()
         engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo=True)
@@ -147,10 +147,11 @@ def write_to_availability_basic(data, filename):
 def write_to_availability(data, filename):
     engine = connect_db()
     Session = sessionmaker(bind=engine)
-    session = Session()
+    #session = Session()
     day = datetime_formatter(filename)
     for i in data:
         try:
+            session = Session()
             station_dynamic = Station_Dynamic(station_number=int(i["number"]),
                                 bike_stands=int(i["bike_stands"]),
                                 bike_stands_available=int(i["available_bike_stands"]),
@@ -161,7 +162,9 @@ def write_to_availability(data, filename):
             print("station_dynamic...", station_dynamic)
 
             session.add(station_dynamic)
+            print("after the add")
             session.commit()
+            print("after the commit")
             session.close()
             
         except Exception as e:
