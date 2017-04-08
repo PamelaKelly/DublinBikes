@@ -94,6 +94,7 @@ def connect_db():
         fh = open(file)
         PASSWORD = fh.readline().strip()
         engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo=True)
+        engine = engine.connect()
         return engine
     except Exception as e:
         print("Error Type: ", type(e))
@@ -141,7 +142,12 @@ def write_to_availability_basic(data, filename):
 
         sql_insert = "INSERT INTO availability (station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day) VALUES (%d, %d, %d, %d, %d, %s)"
         print("pam_ INSERT INTO availability (station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day) VALUES (%d, %d, %d, %d, %d, %s)", station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day)
-        engine.execute(sql_insert, station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day)
+        try:
+            engine.execute(sql_insert, station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day)
+        except Exception as e:
+            print("in the write_to_av_basic function...")
+            print("Error Type: ", type(e))
+            print("Error Details: ", e)
 
 
 def write_to_availability(data, filename):
@@ -182,7 +188,7 @@ def file_to_db(file):
         with open(file, 'r') as obj:
             dataStr = json.load(obj)
             dataJson = json.loads(dataStr)
-        write_to_availability(dataJson, file)
+        write_to_availability_basic(dataJson, file)
     except Exception as e:
         print("Error Type: ", type(e))
         print("Error Details: ", e)
