@@ -94,7 +94,6 @@ def connect_db():
         fh = open(file)
         PASSWORD = fh.readline().strip()
         engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo=True)
-        engine = engine.connect()
         return engine
     except Exception as e:
         print("Error Type: ", type(e))
@@ -129,10 +128,11 @@ def write_to_stations(data):
         print("Error Details: ", e)
 
 def write_to_availability_basic(data, filename):
-    engine = connect_db()
+    #engine = connect_db()
     day = datetime_formatter(filename)
     
     for i in data:
+        engine = connect_db()
         station_number = i["number"]
         bike_stands = i["bike_stands"]
         bike_stands_available = i["available_bike_stands"]
@@ -140,14 +140,16 @@ def write_to_availability_basic(data, filename):
         last_updated = i["last_update"]
         day = day
 
-        sql_insert = "INSERT INTO availability (station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day) VALUES (%d, %d, %d, %d, %d, %s)"
-        print("pam_ INSERT INTO availability (station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day) VALUES (%d, %d, %d, %d, %d, %s)", station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day)
+        sql_insert = "INSERT INTO availability (station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day) VALUES (%s, %s, %s, %s, %s, %s)"
         try:
             engine.execute(sql_insert, station_number, bike_stands, bike_stands_available, bikes_available, last_updated, day)
+            engine.close()
         except Exception as e:
+            engine.close()
             print("in the write_to_av_basic function...")
             print("Error Type: ", type(e))
             print("Error Details: ", e)
+            continue
 
 
 def write_to_availability(data, filename):
