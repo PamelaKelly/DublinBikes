@@ -149,27 +149,26 @@ def write_to_availability(data, filename):
     Session = sessionmaker(bind=engine)
     session = Session()
     day = datetime_formatter(filename)
-
-    for i in data:
-        station_dynamic = Station_Dynamic(station_number=int(i["number"]),
+    try:
+        for i in data:
+            station_dynamic = Station_Dynamic(station_number=int(i["number"]),
                                 bike_stands=int(i["bike_stands"]),
                                 bike_stands_available=int(i["available_bike_stands"]),
                                 bikes_available=int(i["available_bikes"]),
                                 last_updated=int(i["last_update"]),
                                 day=day)
 
-        print("station_dynamic...", station_dynamic)
-        
-        try:
+            print("station_dynamic...", station_dynamic)
+
             session.add(station_dynamic)
             session.commit()
             session.close()
             
-        except Exception as e:
-            session.close()
-            print("Error Type: ", type(e))
-            print("Error details: ", e)
-            continue
+    except Exception as e:
+        session.close()
+        print("Error Type: ", type(e))
+        print("Error details: ", e)
+        continue
 
 
 
