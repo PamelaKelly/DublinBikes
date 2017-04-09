@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxBlIrPB6Cruhy5JHyTQO78wXKHiIj_mo"></script>
+    <link href="/static/Style.css" rel="stylesheet" type="text/css">
+    <title>Dublin Bikes</title>
+<!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxBlIrPB6Cruhy5JHyTQO78wXKHiIj_mo"></script>-->
+</head>
+
+
+<body>
+    <h1>Dublin Bikes</h1>
+    <div class="container">
+        <!-- Inputting the map adapted from https://www.w3schools.com/graphics/google_maps_intro.asp and https://developers.google.com/maps/documentation/javascript/adding-a-google-map-->
+
+        <!-- Putting multiple markers on a map adapted from http://en.marnoto.com/2013/12/mapa-com-varios-marcadores-google-maps.html and https://gist.github.com/parth1020/4481893 -->
+        <div>
+            {% block body %}{% endblock %}
+        </div>
+        
+        <div>
+        {% block content %}{% endblock %}
+        </div>
+
+        <!--Inserting space between map and stats-->
+        <section>
+            <p></p>
+        </section>
+
+        <!-- Inserting divs for stats -->
+        <div class="left">
+            <p> Input statistics here </p>
+        </div>
+        <div class="right">
+            <p> More stats/graphs etc. here</p>
+        </div>
+    </div>
+</body>
+
+</html>

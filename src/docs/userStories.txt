@@ -1,0 +1,8 @@
+As a [role], I [feature] so that [reason]
+
+As a user, I can open the application so that I can see the occupancy information of a particular bike station.
+As a user, I can load the application so that I can predict if a particular bike station will have bikes at a particular time and date..
+As a user, I can go onto the application so that I can plan how long my journey will take from one station to another.
+As a user, I can go onto the application so that I can check the nearest bike repair shops should my bike run into issues.
+As a user, I would like to know if I banking is available at a certain station so that I will know if I can pay by card or not.
+As a user, I would like to know the current weather so that I can plan my journey accordingly.

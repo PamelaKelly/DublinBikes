@@ -1,4 +1,4 @@
-from src.scraper import scraper
+from scraper import scraper
 
 def make_db_tables():
     #connect to db
@@ -23,7 +23,7 @@ def make_db_tables():
             bike_stands INT NOT NULL, 
             bike_stands_available INT NOT NULL, 
             bikes_available INT NOT NULL, 
-            last_updated INT(11) NOT NULL, 
+            last_updated BIGINT NOT NULL, 
             PRIMARY KEY (station_number, last_updated), 
             FOREIGN KEY (station_number) REFERENCES bike_stations(station_number));"""
         engine.execute(sql)
@@ -54,3 +54,4 @@ def alter_column_datatype(table, column, data_type):
     except Exception as e:
         print("Error type: ", type(e))
         print("Error details: ", e)
+        
