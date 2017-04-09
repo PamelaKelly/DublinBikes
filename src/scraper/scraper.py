@@ -90,10 +90,11 @@ def connect_db():
         DB = "DublinBikeProjectDB"
         USER = "theForkAwakens"
         #file = "db_password.txt"
-        file = "../Assignment4-P-E-K/src/scraper/db_password.txt"
+        file = "../Anaconda3/envs/softwareEng/workspace/Assignment4-P-E-K/src/scraper/db_password.txt"
         fh = open(file)
         PASSWORD = fh.readline().strip()
         engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo=True)
+        print("Engine Type Being Returned ", type(engine))
         return engine
     except Exception as e:
         print("Error Type: ", type(e))
@@ -153,11 +154,10 @@ def write_to_availability_basic(data, filename):
 
 
 def write_to_availability(data, filename):
-    engine = connect_db()
-    #session = Session()
     day = datetime_formatter(filename)
     for i in data:
         try:
+            engine = connect_db()
             Session = sessionmaker(bind=engine)
             session = Session()
             station_dynamic = Station_Dynamic(station_number=int(i["number"]),
@@ -176,9 +176,9 @@ def write_to_availability(data, filename):
             session.close()
             
         except Exception as e:
-            session.close()
             print("Error Type: ", type(e))
             print("Error details: ", e)
+            session.close()
             continue
 
 
@@ -190,7 +190,7 @@ def file_to_db(file):
         with open(file, 'r') as obj:
             dataStr = json.load(obj)
             dataJson = json.loads(dataStr)
-        write_to_availability_basic(dataJson, file)
+        write_to_availability(dataJson, file)
     except Exception as e:
         print("Error Type: ", type(e))
         print("Error Details: ", e)
