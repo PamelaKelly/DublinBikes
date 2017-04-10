@@ -90,6 +90,7 @@ def connect_db():
         DB = "DublinBikeProjectDB"
         USER = "theForkAwakens"
         file = "../../Assignment4-P-E-K/src/scraper/db_password.txt"
+        #file = "db_password.txt"
         #file = "../Anaconda3/envs/softwareEng/workspace/Assignment4-P-E-K/src/scraper/db_password.txt"
         fh = open(file)
         PASSWORD = fh.readline().strip()
