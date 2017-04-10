@@ -1,5 +1,7 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 from sqlalchemy import Table, Column, Integer, Unicode
 from sqlalchemy.ext.declarative import declarative_base

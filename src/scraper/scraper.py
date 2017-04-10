@@ -89,8 +89,8 @@ def connect_db():
         PORT = "3306"
         DB = "DublinBikeProjectDB"
         USER = "theForkAwakens"
-        #file = "db_password.txt"
-        file = "../Anaconda3/envs/softwareEng/workspace/Assignment4-P-E-K/src/scraper/db_password.txt"
+        file = "db_password.txt"
+        #file = "../Anaconda3/envs/softwareEng/workspace/Assignment4-P-E-K/src/scraper/db_password.txt"
         fh = open(file)
         PASSWORD = fh.readline().strip()
         engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo=True)
