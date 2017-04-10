@@ -1,46 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxBlIrPB6Cruhy5JHyTQO78wXKHiIj_mo"></script>
-    <script src="/static/js/jquery-3.2.0.min.js"></script>
-    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-    <link href="/static/Style.css" rel="stylesheet" type="text/css">
-    <title>Dublin Bikes</title>
-<!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxBlIrPB6Cruhy5JHyTQO78wXKHiIj_mo"></script>-->
-</head>
-
-
-<body>
-    <h1>Dublin Bikes</h1>
-    <div class="container">
-        <!-- Inputting the map adapted from https://www.w3schools.com/graphics/google_maps_intro.asp and https://developers.google.com/maps/documentation/javascript/adding-a-google-map-->
-
-        <!-- Putting multiple markers on a map adapted from http://en.marnoto.com/2013/12/mapa-com-varios-marcadores-google-maps.html and https://gist.github.com/parth1020/4481893 -->
-        <div>
-           <div id="map" style="width:100%;height:500px;">
-    <script src="/static/js/mainScript.js"></script>
-</div>
-        </div>
-        
-        <div>
-        {% block content %}{% endblock %}
-        </div>
-
-        <!--Inserting space between map and stats-->
-        <section>
+   <head>
+      <meta charset="utf-8">
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxBlIrPB6Cruhy5JHyTQO78wXKHiIj_mo"></script>
+      <script src="/static/js/jquery-3.2.0.min.js"></script>
+      <!-- This is to get the  -->
+      <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+      <link href="/static/Style.css" rel="stylesheet" type="text/css">
+      <title>Dublin Bikes</title>
+      <!--    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxBlIrPB6Cruhy5JHyTQO78wXKHiIj_mo"></script>-->
+   </head>
+   <body>
+      <h1>Dublin Bikes</h1>
+      <div class="container">
+         <div>
+            <div id="map" style="width:100%;height:500px;">
+               <script src="/static/js/mainScript.js"></script>
+            </div>
+         </div>
+         <div>
+            <!-- Placeholder for stats???  -->
+            {% block content %}{% endblock %}
+         </div>
+         <!--Inserting space between map and stats-->
+         <section>
             <p></p>
-        </section>
-
-        <!-- Inserting divs for stats -->
-        <div class="left">
+         </section>
+         <!-- Inserting divs for stats -->
+         <div class="left">
             <p> Input statistics here </p>
-        </div>
-        <div class="right">
+         </div>
+         <div class="right">
             <p> More stats/graphs etc. here</p>
-        </div>
-    </div>
-</body>
-
+         </div>
+      </div>
+      <br><br>
+   </body>
 </html>
