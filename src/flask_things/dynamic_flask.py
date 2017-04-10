@@ -35,9 +35,7 @@ sql = "Select bikes_available from availability where station_number = 1 AND (st
 #below assumption user is looking for stands available at station 1
 
 sql = "Select stands_available from availability where station_number = 1 AND (station_number,last_updated) (SELECT station_number, max(last_updated)FROM availability group by station_number)"    
- 
- 
-    
+     
 #         __tablename__ = 'availability'
 #         station_number = db.Column('station_number', db.Integer, primary_key=True)
 #         bike_stands = db.Column('bike_stands',db.Integer) 
