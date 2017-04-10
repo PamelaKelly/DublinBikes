@@ -24,9 +24,13 @@ function showStationMarkers() {
 
                 google.maps.event.addListener(marker, 'click', (function(marker, stations) {
                     return function() {
-                        infoWindow.setContent("Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address);
+                    	var content = "Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address + "<br>";
+                    	var button = "<input type='button' onclick= 'myFunction()' value='Click me!'></input>";
+                    	var button1 = "<input type='button' onclick='myFunction()' value='Click for more info!!' class='button'></input>";
+                        infoWindow.setContent(content + "<br> " + button1);
                         infoWindow.open(map, marker);
                     }
+
                 })(marker, stations));
 
             })
@@ -39,3 +43,8 @@ function showStationMarkers() {
 }
 
 showStationMarkers();
+
+
+function myFunction() {
+    document.getElementById("demo").innerHTML = "Testing testing";
+}
