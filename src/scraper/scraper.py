@@ -89,8 +89,8 @@ def connect_db():
         PORT = "3306"
         DB = "DublinBikeProjectDB"
         USER = "theForkAwakens"
-        #file = "db_password.txt"
-        file = "../Anaconda3/envs/softwareEng/workspace/Assignment4-P-E-K/src/scraper/db_password.txt"
+        file = "../../Assignment4-P-E-K/src/scraper/db_password.txt"
+        #file = "../Anaconda3/envs/softwareEng/workspace/Assignment4-P-E-K/src/scraper/db_password.txt"
         fh = open(file)
         PASSWORD = fh.readline().strip()
         engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo=True)
@@ -167,12 +167,12 @@ def write_to_availability(data, filename):
                                 last_updated=int(i["last_update"]),
                                 day=day)
 
-            print("station_dynamic...", station_dynamic)
+            #print("station_dynamic...", station_dynamic)
 
             session.add(station_dynamic)
-            print("after the add")
+            #print("after the add")
             session.commit()
-            print("after the commit")
+            #print("after the commit")
             session.close()
             
         except Exception as e:
@@ -196,10 +196,13 @@ def file_to_db(file):
         print("Error Details: ", e)
       
 def multiple_files_to_db():
+    file_count = 0
     try:       
         for file in os.listdir(os.getcwd()):
-            if file.endswith(".txt"):
+            if file.endswith(".txt") and file_count > 375:
                 file_to_db(file)
+            file_count += 1
+            print("FILE COUNT: ", file_count)
     except Exception as e:
         print("Error Type: ", type(e))
         print("Error Details: ", e)
