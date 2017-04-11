@@ -57,47 +57,47 @@ def connect_weather_db():
 
 
 def write_to_weather_db(data):
-	"""Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
+    """Creates SQLAlchemy objects from json data and pushes these objects to the db as rows"""
 
-	engine = connect_weather_db()
-	Session = sessionmaker(bind=engine)
-	session = Session()
-	try:
-		weather_instance = weather(date_time = data["dt"],
-			temp = data["main"]["temp"], 
-			temp_max = data["main"]["temp_max"], 
-			temp_min = data["main"]["temp_min"],
-			humidity = data["main"]["humidity"],
-			main = data["weather"][0]["main"],
-			weather_description = data["weather"][0]["description"],
-			wind_speed = data["wind"]["speed"])
+    engine = connect_weather_db()
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    try:
+        weather_instance = weather(date_time = data["dt"],
+            temp = data["main"]["temp"], 
+            temp_max = data["main"]["temp_max"], 
+            temp_min = data["main"]["temp_min"],
+            humidity = data["main"]["humidity"],
+            main = data["weather"][0]["main"],
+            weather_description = data["weather"][0]["description"],
+            wind_speed = data["wind"]["speed"])
 
-		session.add(weather_instance)
-		session.commit()
-		session.close()   
+        session.add(weather_instance)
+        session.commit()
+        session.close()   
 
-	except Exception as e:
-		print("in the write_to_weather_db function")
-		print("Error Type: ", type(e))
-		print("Error Details: ", e)  
+    except Exception as e:
+        print("in the write_to_weather_db function")
+        print("Error Type: ", type(e))
+        print("Error Details: ", e)  
 
 
 
 def get_weather_data():
-	"""Sends the request to the open weather API and returns a json file"""
-	try:
-		file = "weather_api_key.txt"
-		fh = open(file)
-		APIKEY = fh.readline().strip()
-		URI = "http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid="
-		r = requests.get(URI, params={"apiKey": APIKEY})
-		data = json.JSONDecoder().decode(r.text)
-		return data
-	except Exception as e:
-		print("in the get_weather_data")
-		print("Error type: ", type(e))
-		print("Error Details: ", e)
-	
+    """Sends the request to the open weather API and returns a json file"""
+    try:
+        file = "weather_api_key.txt"
+        fh = open(file)
+        APIKEY = fh.readline().strip()
+        URI = "http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid="
+        r = requests.get(URI, params={"apiKey": APIKEY})
+        data = json.JSONDecoder().decode(r.text)
+        return data
+    except Exception as e:
+        print("in the get_weather_data")
+        print("Error type: ", type(e))
+        print("Error Details: ", e)
+    
 def run_weather_scraper():
     try:
         while True:
@@ -108,10 +108,9 @@ def run_weather_scraper():
         print("Error Type: ", type(e))
         print("Error Details: ", e)
 
-run_weather_scraper()
+#run_weather_scraper()
 
 '''
 Created on Apr 3, 2017
-
 @author: Katherine
 '''
