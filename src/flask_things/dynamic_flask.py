@@ -1,7 +1,5 @@
 from flask import Flask
-#from flask_sqlalchemy import SQLAlchemy
-import sqlalchemy
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 from sqlalchemy import Table, Column, Integer, Unicode
 from sqlalchemy.ext.declarative import declarative_base
@@ -17,6 +15,7 @@ db = SQLAlchemy(app)
 
 
 class Dynamic_Data(flask.views.MethodView):
+    #below is wrong - the / is the page - fix later
     @app.route("/availability")
 
 #this gives all data from most recent updated info
@@ -30,14 +29,39 @@ class Dynamic_Data(flask.views.MethodView):
         return x
 #below are sql queries for different requests
 #I am not sure how they are used yet in flask or tied to front end
-# below is the assumption that they are looking for number of bikes at station 1
+# below is query fetching number of bikes at a station
+#station now is always 1
 
-sql = "Select bikes_available from availability where station_number = 1 AND (station_number,last_updated) in (SELECT station_number, max(last_updated)FROM availability group by station_number)"
-
+    def get_bikes_now_available(self):
+        engine = scraper.connect_db()
+        station_number = 1
+        sql = "Select availability.bikes_available, bike_stations.station_name from availability Inner Join bike_stations on availability.station_number = availability.station_number; Select bikes_available from availability where station_name = 'CHATHAM STREET' AND (station_number,last_updated) in (SELECT station_number, max(last_updated)FROM availability group by station_number)"
+        engine.execute(sql,station_number)
+        
 #below assumption user is looking for stands available at station 1
-
-sql = "Select stands_available from availability where station_number = 1 AND (station_number,last_updated) (SELECT station_number, max(last_updated)FROM availability group by station_number)"    
-     
+    def get_stands_now_available(self):
+        engine = scraper.connect_db()
+        station_number = 1
+        sql = "Select stands_available from availability where station_number = %s AND (station_number,last_updated) (SELECT station_number, max(last_updated)FROM availability group by station_number)"    
+        engine.execute(sql,station_number)
+    
+    def get_avg_bikes(self):
+        engine = scraper.connect_db()
+        station_number = 1
+        day = 'Mon'
+        sql = "select AVG(bikes_available) from availability where station_number = %s and day = %s"
+        engine.execute(sql,station_number,day)
+        
+#Below returns all stations with banking  
+class Static_Data(flask.views.MethodView):
+#below is wrong with route
+    @app.route("/bike_stations")     
+    def where_banking(self):
+        engine = scraper.connect_db()
+        sql = "select station_number,station_address from bike_stations where banking_available > 0"
+        engine.execute(sql)
+    
+            
 #         __tablename__ = 'availability'
 #         station_number = db.Column('station_number', db.Integer, primary_key=True)
 #         bike_stands = db.Column('bike_stands',db.Integer) 
@@ -45,10 +69,7 @@ sql = "Select stands_available from availability where station_number = 1 AND (s
 #         bikes_available = db.Column('bikes_available', db.Integer)
 #         last_updated = db.Column('last_updated', db.Integer, primary_key=True) 
 #     day = db.Column('day',db.Unicode)
-    
-#Not sure how to put SQL requests in dynamic yet but below are requests
 
-#bikes available at specific station now
 
 
 if __name__=="__main__":

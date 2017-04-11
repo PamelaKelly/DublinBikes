@@ -12,6 +12,12 @@ div.container {
     margin: auto;
 }
 
+div.container2 {
+    width: 90%;
+    background-color: white;
+    margin: auto;
+}
+
 h1 {
     color: white;
     text-align: center;
@@ -22,7 +28,7 @@ The code for text shadow was adapted from w3schools at http://www.w3schools.com/
 Code for box-shadow adapted from w3schools.com at http://www.w3schools.com/css/css3_images.asp */
 div.left {
     float: left;
-    /*left: 10px;*/
+    left: 10px;
     padding: 10px;
     width: 45%;
     height: 150px;
@@ -34,7 +40,7 @@ div.left {
 
 div.right {
     background: white;
-    float: right;
+    float: left;
     right: 1px;
     padding: 10px;
     width: 45%;
