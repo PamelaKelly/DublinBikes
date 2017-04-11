@@ -156,11 +156,11 @@ def write_to_availability_basic(data, filename):
 
 def write_to_availability(data, filename):
     day = datetime_formatter(filename)
+    engine = connect_db()
+    session = sessionmaker(bind = engine)
+    session = Session()
     for i in data:
         try:
-            engine = connect_db()
-            Session = sessionmaker(bind=engine)
-            session = Session()
             station_dynamic = Station_Dynamic(station_number=int(i["number"]),
                                 bike_stands=int(i["bike_stands"]),
                                 bike_stands_available=int(i["available_bike_stands"]),
@@ -168,19 +168,18 @@ def write_to_availability(data, filename):
                                 last_updated=int(i["last_update"]),
                                 day=day)
 
-            #print("station_dynamic...", station_dynamic)
 
             session.add(station_dynamic)
-            #print("after the add")
             session.commit()
-            #print("after the commit")
-            session.close()
             
         except Exception as e:
             print("Error Type: ", type(e))
             print("Error details: ", e)
-            session.close()
+            session.rollback()
             continue
+
+    session.close()
+    engine.dispose()
 
 
 
@@ -200,7 +199,7 @@ def multiple_files_to_db():
     file_count = 0
     try:       
         for file in os.listdir(os.getcwd()):
-            if file.endswith(".txt") and file_count > 375:
+            if file.endswith(".txt"):
                 file_to_db(file)
             file_count += 1
             print("FILE COUNT: ", file_count)
