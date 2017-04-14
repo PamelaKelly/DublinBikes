@@ -26,6 +26,7 @@ def get_stations():
     rows = engine.execute(sql).fetchall()
     print("#found {} stations", len(rows))
     stations = jsonify(stations=[dict(row) for row in rows])
+    engine.dispose()
     return stations
 
 

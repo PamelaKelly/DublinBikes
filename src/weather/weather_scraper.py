@@ -59,7 +59,7 @@ def write_to_weather_db(data):
 			humidity=data["main"]["humidity"],
 			main=data["weather"][0]["main"],
 			weather_description=data["weather"][0]["description"],
-			wind_speed=data["wind"]["speed"])
+			wind_speed=data["wind"]["speed"])  
 
         session.add(weather_instance)
         session.commit()
@@ -89,9 +89,3 @@ def run_weather_scraper():
         time.sleep(1800)
 
 run_weather_scraper()
-
-'''
-Created on Apr 3, 2017
-
-@author: Katherine
-'''

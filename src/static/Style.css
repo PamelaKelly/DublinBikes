@@ -9,6 +9,11 @@ div.container {
     width: 90%;
     height: 100%;
     font-family: "calibri";
+    margin: auto;
+}
+
+div.container2 {
+    width: 90%;
     background-color: white;
     margin: auto;
 }
@@ -29,15 +34,13 @@ div.left {
     height: 150px;
     border: 2px solid black;
     color: black;
-/*    text-shadow: 2px 1px black;*/
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    display: inline-block;
     background: white;
 }
 
 div.right {
     background: white;
-    float: right;
+    float: left;
     right: 1px;
     padding: 10px;
     width: 45%;
@@ -45,6 +48,22 @@ div.right {
     border: 2px solid black;
     color: black;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.button {
+    border-radius: 2px;
+    border: none;
+    color: black;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
     display: inline-block;
-    
+    font-size: 12px;
+    margin: 2px 1px;
+    background-color: lightgrey;
+}
+
+.button:hover {
+    background-color: #008CBA;
+    color: white;
 }

@@ -24,14 +24,13 @@ function showStationMarkers() {
 
                 google.maps.event.addListener(marker, 'click', (function(marker, stations) {
                     return function() {
-                        infoWindow.setContent("Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address);
+                    	var content = "Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address + "<br>";
+                    	var button = "<input type='button' onclick='myFunction()' value='Click for more detailed information' class='button'></input>";
+                        infoWindow.setContent(content + "<br> " + button);
                         infoWindow.open(map, marker);
                     }
                 })(marker, stations));
-
             })
-
-
         })
         .fail(function() {
             console.log("error");
@@ -39,3 +38,22 @@ function showStationMarkers() {
 }
 
 showStationMarkers();
+
+
+function myFunction() {
+    document.getElementById("demo").innerHTML = "Testing testing" + "<br>" + "More info specific for that station will appear here";
+}
+
+
+// Get weather info
+function displayWeather() {
+	var jqxhr = $.getJSON("http://127.0.0.1:5000/weather", null, function(data) {
+            var weather = data.weather;
+            _.forEach(weather, function(weather) {
+            	console.log(weather)
+            	document.getElementById("weather").innerHTML = weather.temp;
+            })
+        })
+}
+
+displayWeather()

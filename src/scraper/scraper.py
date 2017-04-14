@@ -161,9 +161,9 @@ def write_to_availability(data, day_source):
     session.close()
     engine.dispose()
 
+
 def file_to_db(file, write_function):
-    """ Helper function to write data from file to database
-    Given the file name and the function to pass the data to"""
+    """ Helper function to write data from file to database"""
     try:
         with open(file, 'r') as obj:
             dataStr = json.load(obj)
@@ -174,10 +174,12 @@ def file_to_db(file, write_function):
         print("Error Details: ", e)
       
 def multiple_files_to_db():
+    file_count = 0
     try:       
         for file in os.listdir(os.getcwd()):
             if file.endswith(".txt"):
-                file_to_db(file)
+                file_to_db(file, write_to_availability)
+            file_count += 1
     except Exception as e:
         print("Error Type: ", type(e))
         print("Error Details: ", e)
