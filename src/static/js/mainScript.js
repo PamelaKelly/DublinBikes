@@ -21,10 +21,15 @@ function showStationMarkers() {
                     title: station.station_name,
                     station_number: station.station_number
                 });
-
+                var stationNum = "{{ stations.station_number }}";
                 google.maps.event.addListener(marker, 'click', (function(marker, stations) {
                     return function() {
-                    	var content = "Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address + "<br>";
+                        if (station.banking_available == 0) {
+                            station.banking_available = "No";
+                        } else {
+                            station.banking_available = "Yes";
+                        }
+                    	var content = "Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address + "<br>" + "Banking: " + station.banking_available + "<br>";
                     	var button = "<input type='button' onclick='myFunction()' value='Click for more detailed information' class='button'></input>";
                         infoWindow.setContent(content + "<br> " + button);
                         infoWindow.open(map, marker);
@@ -39,19 +44,36 @@ function showStationMarkers() {
 
 showStationMarkers();
 
+function testBank() {
+    var jqxhr = $.getJSON("http://127.0.0.1:5000/stations", null, function(data) {
+        var stations = data.stations;
+        _.forEach(stations, function(station){
+            document.getElementById("demo").innerHTML = stations.banking_available;
+        })
 
-function myFunction() {
-    document.getElementById("demo").innerHTML = "Testing testing" + "<br>" + "More info specific for that station will appear here";
+    })
 }
 
+
+function myFunction() {
+    document.getElementById("demo").innerHTML = "boo";
+    //"Testing testing" + "<br>" + "More info specific for that station will appear here";
+    var jqxhr = $.getJSON("http://127.0.0.1:5000/availability", null, function(data){
+        var availability = data.availability;
+        _.forEach(availability, function(availability){
+            var stationThing = "{{ availability.bike_stands_available }}";
+            document.getElementById("availability").innerHTML = stationNum;
+
+        })
+    })
+}
 
 // Get weather info
 function displayWeather() {
 	var jqxhr = $.getJSON("http://127.0.0.1:5000/weather", null, function(data) {
             var weather = data.weather;
             _.forEach(weather, function(weather) {
-            	console.log(weather)
-            	document.getElementById("weather").innerHTML = weather.temp;
+            	infowindow.setContent(weather.main);
             })
         })
 }
