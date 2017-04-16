@@ -21,7 +21,7 @@ function showStationMarkers() {
                     title: station.station_name,
                     station_number: station.station_number
                 });
-                var stationNum = "{{ stations.station_number }}";
+                //var stationNum = "{{ stations.station_number }}";
                 google.maps.event.addListener(marker, 'click', (function(marker, stations) {
                     return function() {
                         if (station.banking_available == 0) {
@@ -31,7 +31,9 @@ function showStationMarkers() {
                         }
                     	var content = "Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address + "<br>" + "Banking: " + station.banking_available + "<br>";
                     	var button = "<input type='button' onclick='myFunction()' value='Click for more detailed information' class='button'></input>";
-                        infoWindow.setContent(content + "<br> " + button);
+                        // update_url will work if you say onclick='update_url(\"1234\"'
+                        var button2 = "<input type='button' onclick='update_url(station.station_number)' value='Test'></input>";
+                        infoWindow.setContent(content + "<br> " + button + button2);
                         infoWindow.open(map, marker);
                     }
                 })(marker, stations));
@@ -43,6 +45,12 @@ function showStationMarkers() {
 }
 
 showStationMarkers();
+
+// This appends the given variable url to the end of the url without reloading the page
+// http://stackoverflow.com/questions/35395485/change-url-without-refresh-the-page
+function update_url(url) {
+    history.pushState(null, null, url);
+}
 
 function testBank() {
     var jqxhr = $.getJSON("http://127.0.0.1:5000/stations", null, function(data) {
@@ -69,13 +77,13 @@ function myFunction() {
 }
 
 // Get weather info
-function displayWeather() {
-	var jqxhr = $.getJSON("http://127.0.0.1:5000/weather", null, function(data) {
-            var weather = data.weather;
-            _.forEach(weather, function(weather) {
-            	infowindow.setContent(weather.main);
-            })
-        })
-}
+// function displayWeather() {
+// 	var jqxhr = $.getJSON("http://127.0.0.1:5000/weather", null, function(data) {
+//             var weather = data.weather;
+//             _.forEach(weather, function(weather) {
+//             	infowindow.setContent(weather.main);
+//             })
+//         })
+// }
 
-displayWeather()
+// displayWeather()
