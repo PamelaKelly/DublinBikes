@@ -66,7 +66,6 @@ function testBank() {
 
 
 function myFunction(station_number) {
-	//gets data from /station_details - function set up in app.py
     //document.getElementById("demo").innerHTML = "boo";
     //"Testing testing" + "<br>" + "More info specific for that station will appear here";
     var jqxhr = $.getJSON("http://127.0.0.1:5000/station_details?station_number=" + station_number + "\"", null, function(data){

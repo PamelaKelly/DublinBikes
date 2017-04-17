@@ -63,6 +63,7 @@ def availability():
 @app.route('/station_details', methods=['GET', 'POST'])
 def station_details():
     """Function to get dyanmic details for stations"""
+    #Info will be pulled from a javascript function on the home page
     station_number = request.args.get('station_number')
     engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
     sql = "SELECT * FROM availability WHERE station_number = %s ORDER BY last_updated DESC LIMIT 1;"
