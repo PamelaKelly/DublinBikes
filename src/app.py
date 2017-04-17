@@ -3,8 +3,8 @@ import flask
 import functools
 from flask import Flask, render_template, request
 from flask import jsonify
-from src.scraper import scraper
-from src.weather import weather_scraper
+from scraper import scraper
+from weather import weather_scraper
 from main import Main
 
 app = flask.Flask(__name__)
@@ -59,6 +59,19 @@ def availability():
 #     if request.method == 'POST':
 #         result = request.form
 #         return render_template("result.html",result = result)
+
+@app.route('/station_details', methods=['GET', 'POST'])
+def station_details():
+    """Function to get dyanmic details for stations"""
+    #Info will be pulled from a javascript function on the home page
+    station_number = request.args.get('station_number')
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    sql = "SELECT * FROM availability WHERE station_number = %s ORDER BY last_updated DESC LIMIT 1;"
+    details = engine.execute(sql, station_number).fetchall()
+    print("#found {} stations", len(details))
+    details = jsonify(stations=[dict(detail) for detail in details])
+    engine.dispose()
+    return details
     
     
 @app.route('/results.html', methods=['GET','POST'])

@@ -88,4 +88,4 @@ def run_weather_scraper():
         scraper.scraper.write_to_file(data)
         time.sleep(1800)
 
-run_weather_scraper()
+#run_weather_scraper()
