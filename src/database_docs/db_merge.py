@@ -1,57 +1,39 @@
-#Help for this code and explainations came from http://www.tylerlesmann.com/2009/apr/27/copying-databases-across-platforms-sqlalchemy/
-import getopt
-import sys
-import sqlalchemy
-from sqlalchemy import create_engine, MetaData, Table
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-#use this when imports work
-# from scraper.scraper import connect_db
-# from weather.weather_scraper import connect_weather_db
-def connect_make_session(URI, PORT, DB, USER, password_file):
+#code explaining and help from http://www.paulsprogrammingnotes.com/2014/01/clonecopy-table-schema-from-one.html
+#and also from http://www.tylerlesmann.com/2009/apr/27/copying-databases-across-platforms-sqlalchemy/
+from sqlalchemy import create_engine, Table, Column, Integer, Unicode, MetaData, String, Text, update, and_, select, func, types
+
+def make_engine(URI, PORT, DB, USER, password_file):
     """Connects to the database"""
     try:
         fh = open(password_file)
         PASSWORD = fh.readline().strip()
-        engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo=False, convert_unicode=True)
-        Session = sessionmaker(bind=engine)
-        return Session(), engine
+        engine = create_engine("mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB), echo=True, convert_unicode=True)
+        return engine
     except Exception as e:
         print("Error Type: ", type(e))
-        print("Error Details: ", e)   
+        print("Error Details: ", e) 
 
-def pull_data(tables):
-    source, sengine = connect_make_session("weatherdb.cnmhll8wqxlt.us-west-2.rds.amazonaws.com", "3306", "WeatherDB", "Administrator", "weatherDB_password.txt")
-    smeta = MetaData(bind=sengine)
-    destination, dengine = connect_make_session("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+def merge():
+    # create engine, acknowledge existing columns
+    src_engine = make_engine("weatherdb.cnmhll8wqxlt.us-west-2.rds.amazonaws.com", "3306", "WeatherDB", "Administrator", "weatherDB_password.txt")
+    src_engine._metadata = MetaData(bind=src_engine)
+    src_engine._metadata.reflect(src_engine) # get columns from existing table
+    #create table object for the original Table
+    orig_table = Table('weather_data', src_engine._metadata)
 
-    for table_name in tables:
-        print ('Processing', table_name)
-        print ('Pulling schema from source server')
-        table = Table(table_name, smeta, autoload=True)
-        print ('Creating table on destination server')
-        table.metadata.create_all(dengine)
-        NewRecord = quick_mapper(table)
-        columns = table.columns.keys()
-        print ('Transferring records')
-        for record in source.query(table).all():
-            data = dict(
-                [(str(column), getattr(record, column)) for column in columns]
-            )
-            destination.merge(NewRecord(**data))
-    print ('Committing changes')
-    destination.commit()
+    # create engine for destination 
+    dest_engine = make_engine("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    dest_engine._metadata = MetaData(bind=dest_engine)
+    #make table object for newTable
+    new_table = Table('weather_data2', dest_engine._metadata)
 
-def quick_mapper(table):
-    Base = declarative_base()
-    class GenericMapper(Base):
-        __table__ = table
-    return GenericMapper
+    # copy schema and create newTable from oldTable
+    for column in orig_table.columns:
+        new_table.append_column(column.copy())
+        new_table.create()
+    return new_table
 
-if __name__ == '__main__':
-    
-    pull_data('weather_data')
-
+merge()
 '''
 Created on Apr 17, 2017
 
