@@ -32,10 +32,9 @@ function showStationMarkers() {
                         }
 						var station_number = station.station_number;
                     	var content = "Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address + "<br>" + "Banking: " + station.banking_available + "<br>";
-                    	var button = "<input type='submit' onclick='myFunction(" + station_number + ")' value='Click for more detailed information' class='submit'></input>";
-                        // update_url will work if you say onclick='update_url(\"1234\"'
-                        var button2 = "<input type='button' onclick='update_url(station.station_number)' value='Test'></input>";
-                        infoWindow.setContent(content + "<br> " + button + button2);
+                    	//var button = "<input type='submit' onclick='myFunction(" + station_number + ")' value='Click for more detailed information' class='submit'></input>";
+                        var button = "<button onclick='myFunction(" + station_number + ")'>Click here for more detailed information!</button>";
+                        infoWindow.setContent(content + "<br> " + button);
                         infoWindow.open(map, marker);
                     }
                 })(marker, stations));
@@ -53,17 +52,6 @@ showStationMarkers();
 function update_url(url) {
     history.pushState(null, null, url);
 }
-
-function testBank() {
-    var jqxhr = $.getJSON("http://127.0.0.1:5000/stations", null, function(data) {
-        var stations = data.stations;
-        _.forEach(stations, function(station){
-            document.getElementById("demo").innerHTML = stations.banking_available;
-        })
-
-    })
-}
-
 
 function myFunction(station_number) {
     //document.getElementById("demo").innerHTML = "boo";

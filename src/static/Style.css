@@ -50,7 +50,7 @@ div.right {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.button {
+button {
     border-radius: 2px;
     border: none;
     color: black;
@@ -63,7 +63,7 @@ div.right {
     background-color: lightgrey;
 }
 
-.button:hover {
-    background-color: #008CBA;
+button:hover {
+    background-color: #1D8282;
     color: white;
 }
