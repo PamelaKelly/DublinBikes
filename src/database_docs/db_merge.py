@@ -1,10 +1,10 @@
 #Help for this code and explainations came from http://www.tylerlesmann.com/2009/apr/27/copying-databases-across-platforms-sqlalchemy/
 import getopt
 import sys
+import sqlalchemy
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-import pymysql
 #use this when imports work
 # from scraper.scraper import connect_db
 # from weather.weather_scraper import connect_weather_db
