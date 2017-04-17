@@ -2,7 +2,7 @@
 #code explaining and help from http://www.paulsprogrammingnotes.com/2014/01/clonecopy-table-schema-from-one.html
 #and also from http://www.tylerlesmann.com/2009/apr/27/copying-databases-across-platforms-sqlalchemy/
 from sqlalchemy import create_engine, Table, Column, Integer, Unicode, MetaData, String, Text, update, and_, select, func, types
-
+import pymysql
 
 def make_engine(URI, PORT, DB, USER, password_file):
     """Connects to the database"""
