@@ -105,7 +105,7 @@ def connect_db(URI, PORT, DB, USER, password_file):
 def write_to_stations(data, filename):
     #filename not used here but want to use a callback in 
     #write to file... 
-    engine = connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -137,7 +137,7 @@ def write_to_stations(data, filename):
 def write_to_availability(data, day_source):
     date_time = datetime_formatter(day_source)
     day = date_time[0]
-    engine = connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     Session = sessionmaker(bind=engine)
     session = Session()
     for i in data:
@@ -202,11 +202,11 @@ def get_data(key_file, URI, NAME):
 def run_scraper():
     """Runs the overall program to scrape the data and store the data"""
     while True:
-        data = get_data("db-apikey.txt", "https://api.jcdecaux.com/vls/v1/stations", "Dublin")
+        data = get_data("/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db-apikey.txt", "https://api.jcdecaux.com/vls/v1/stations", "Dublin")
         write_to_file(data)
         write_to_availability(data, time.time())
         time.sleep(300)
 
 
-#run_scraper()
+run_scraper()
 

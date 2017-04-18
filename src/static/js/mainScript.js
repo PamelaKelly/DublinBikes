@@ -9,8 +9,10 @@ function showStationMarkers() {
     });
     // Info window from Google Map API https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
     var infoWindow = new google.maps.InfoWindow();
-    var jqxhr = $.getJSON("http://127.0.0.1:5000/stations", null, function(data) {
+    var jqxhr = $.getJSON("http://127.0.0.1/stations", null, function(data) {
             var stations = data.stations;
+            console.log("hello...");
+            console.log(stations);
             _.forEach(stations, function(station) {
                 var marker = new google.maps.Marker({
                     position: {
@@ -56,7 +58,7 @@ function update_url(url) {
 function myFunction(station_number) {
     //document.getElementById("demo").innerHTML = "boo";
     //"Testing testing" + "<br>" + "More info specific for that station will appear here";
-    var jqxhr = $.getJSON("http://127.0.0.1:5000/station_details?station_number=" + station_number + "\"", null, function(data){
+    var jqxhr = $.getJSON("http://127.0.0.1/station_details?station_number=" + station_number + "\"", null, function(data){
         var station_details = data.stations;
         _.forEach(station_details, function(station){
             //var stationThing = "{{ station_details.bike_stands_available }}";
@@ -67,7 +69,7 @@ function myFunction(station_number) {
 
 // Get weather info
 // function displayWeather() {
-// 	var jqxhr = $.getJSON("http://127.0.0.1:5000/weather", null, function(data) {
+// 	var jqxhr = $.getJSON("http://127.0.0.1/weather", null, function(data) {
 //             var weather = data.weather;
 //             _.forEach(weather, function(weather) {
 //             	infowindow.setContent(weather.main);
