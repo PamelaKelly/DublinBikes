@@ -65,6 +65,20 @@ function myFunction(station_number) {
     })
 }
 
+//Get current weather info
+function displayweather(){
+        document.write("jquery loaded");
+        $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid=d3d46f56da72cd82f71b36179d95b0bd",function(json){
+            document.write(JSON.stringify(json));
+        });
+    }
+displayweather()
+
+
+
+
+
+
 // Get weather info
 // function displayWeather() {
 // 	var jqxhr = $.getJSON("http://127.0.0.1:5000/weather", null, function(data) {
