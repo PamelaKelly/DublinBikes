@@ -42,7 +42,7 @@ class Dynamic_Data(flask.views.MethodView):
     def get_stands_now_available(self):
         engine = scraper.connect_db()
         station_number = 1
-        sql = "Select stands_available from availability where station_number = %s AND (station_number,last_updated) (SELECT station_number, max(last_updated)FROM availability group by station_number)"    
+        sql = "Select stands_available from availability where station_number = %s AND (station_number,last_updated) in (SELECT station_number, max(last_updated)FROM availability group by station_number)"    
         engine.execute(sql,station_number)
     
     def get_avg_bikes(self):
