@@ -23,7 +23,7 @@ def page_not_found(error):
 
 @app.route("/stations")
 def get_stations():
-    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     sql = "select * from bike_stations;"
     rows = engine.execute(sql).fetchall()
     print("#found {} stations", len(rows))
@@ -43,7 +43,7 @@ def get_weather():
 
 @app.route("/availability")
 def availability():
-    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/Assignment4-P-E-K/src/scraper/db_password.txt")
     # change this to suit what queries we will be using
     sql = "SELECT * from availability;"
     #sql = "SELECT bike_stands_available, bikes_available FROM availability where day='Wed' and station_number='1';"
@@ -65,7 +65,7 @@ def station_details():
     """Function to get dyanmic details for stations"""
     #Info will be pulled from a javascript function on the home page
     station_number = request.args.get('station_number')
-    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     sql = "SELECT * FROM availability WHERE station_number = %s ORDER BY last_updated DESC LIMIT 1;"
     details = engine.execute(sql, station_number).fetchall()
     print("#found {} stations", len(details))
@@ -76,7 +76,7 @@ def station_details():
     
 @app.route('/results.html', methods=['GET','POST'])
 def results():
-    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     sql = "SELECT * FROM bike_stations WHERE station_number = '{};"
     rows = engine.execute(sql).fetchall()
     posts = [dict(item=row[0], name=row[1]) for row in rows]
