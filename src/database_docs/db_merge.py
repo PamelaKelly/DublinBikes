@@ -42,7 +42,7 @@ def write_to_new_table(data, filename):
     engine = connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
     Session = sessionmaker(bind=engine)
     session = Session()
-
+    
     for i in data:
         try:
             banking = 1 if (i['banking']) else 0
