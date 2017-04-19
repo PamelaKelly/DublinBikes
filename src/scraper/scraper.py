@@ -208,5 +208,3 @@ def run_scraper():
         time.sleep(300)
 
 
-run_scraper()
-
