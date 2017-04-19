@@ -7,21 +7,46 @@ body {
 
 div.container {
     width: 90%;
-    height: 100%;
+    height: 700px;
     font-family: "calibri";
     margin: auto;
+    display: block;
+}
+
+div.inline {
+    float: left;
+    border: 2px solid black;
+}
+
+.colour {
+    border: 2px solid black;
+    background-color: white;
+}
+
+.weatherDiv {
+    float: right;
+    right: 10px;
+    width: 20%;
+    height: 500px;
+    font-size: 18px;
+    background-color: white;
+    text-align: center;
+    border: 2px solid black;
 }
 
 div.container2 {
     width: 90%;
     background-color: white;
     margin: auto;
+    height: 450px;
+    display: block;
 }
 
 h1 {
     color: white;
     text-align: center;
 }
+
 
 /*Code for overflow was obtained from w3schools.com at http://www.w3schools.com/css/css_table.asp
 The code for text shadow was adapted from w3schools at http://www.w3schools.com/cssref/css3_pr_text-shadow.asp

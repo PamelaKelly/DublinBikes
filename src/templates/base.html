@@ -9,38 +9,45 @@
       <!-- This is to get the _.ForEach working in the javaScript file -->
       <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
       <link href="/static/Style.css" rel="stylesheet" type="text/css">
+      <link rel="icon" href="data:;base64,iVBORw0KGgo=">
       <title>Dublin Bikes</title>
    </head>
+
    <body>
       <h1>Dublin Bikes</h1>
       <div class="container">
-         <div>
-            <div id="map" style="width:100%;height:500px;">
+            <div class="inline" id="map" style="width:70%;height:500px;">
                <script src="/static/js/mainScript.js"></script>
             </div>
-         </div>
-       </div>
-       <div>
-        <div>
-            <!-- Placeholder for stats???  -->
-            {% block content %}{% endblock %}
-         </div>
-         <!--Inserting space between map and stats-->
-         <section>
-         <p id="demo"></p>
-          <p id="availability"></p>
-            <p></p>
-         </section>
-         <!-- Inserting divs for stats -->
-         <div class="left">
-            <p> Input statistics here </p>
-         </div>
-         <div class="left">
-            <p> More stats/graphs etc. here</p>
-         </div>
-                 </div>
-       <br><br><br><br><br>
-   
+            <!-- Getting live weather data -->
+            <div class="weatherDiv">
+            <h2> The current weather is: </h2>
+            <div id="weather"></div>         
+            <p id="currentWeather">...</p>
+            <p id="currentTemp">...</p>
+            <p id="windspeed">...</p>
+            <div id="icon">...</div>
+            <p>---------------------------------------</p>
+            <h3> Did you know? </h3>
+            <div id="changeText" > Cycling is 3 times faster than walking </div>
+                <script type="text/javascript">
+                // http://stackoverflow.com/questions/6398526/javascript-jquery-or-something-to-change-text-every-some-seconds
+                var text = ["A bicycle can stay upright without a rider as long as it’s moving at 8mph or faster.", "The term \"bicycle\" first entered into popular usage in France in the 1860s.", "There are roughly one billion bicycles in the world (about twice as many as motor vehicles).", "Helmets have been found to be 85% effective in preventing head injury.", "Bicycles currently displace over 238 million gallons of gasoline per year, by replacing car trips with bicycle trips.", "Cycling is 3 times faster than walking"];
+                var counter = 0;
+                var elem = document.getElementById("changeText");
+                setInterval(change, 6000);
+                function change() {
+                 elem.innerHTML = text[counter];
+                    counter++;
+                    if(counter >= text.length) { counter = 0; }
+                }
+                </script>
+                </div>
+                </div>
+
+
+<!--                This isn't displaying under the map. Dunno why. Will look at tomorrow-->
+                 <p class="colour" id="availability"></p> 
       <br><br>
    </body>
 </html>
