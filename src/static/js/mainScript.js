@@ -75,7 +75,7 @@ function showStationMarkers() {
 showStationMarkers();
 
 // This appends the given variable url to the end of the url without reloading the page
-// http://stackoverflow.com/questions/35395485/change-url-without-refresh-the-page
+// http://stackoverflow.com/questions/35395485/change-url-without-refresh-the-page   
 function update_url(url) {
     history.pushState(null, null, url);
 }
