@@ -65,9 +65,9 @@ class Station_Dynamic(Base):
 
 def datetime_formatter(info):
     """Takes the current time and returns the date, time and day of the week as a string"""
-    if type(info) == float:
-        dt = datetime.datetime.fromtimestamp(info).strftime('%Y-%m-%d %H-%M-%S')
-        day = datetime.datetime.fromtimestamp(info).strftime('%a')
+    if type(info) == float or type(info) == int:
+        dt = datetime.datetime.fromtimestamp(info/1000).strftime('%Y-%m-%d %H-%M-%S')
+        day = datetime.datetime.fromtimestamp(info/1000).strftime('%a')
         return day, dt
     elif type(info) == str:
         return day_from_filename(info)
