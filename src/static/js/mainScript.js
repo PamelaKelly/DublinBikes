@@ -58,6 +58,7 @@ function showStationMarkers() {
                             station.banking_available = "Yes";
                         }
 						var station_number = station.station_number;
+						// var station_name = station.station_name;
                     	var content = "Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address + "<br>" + "Banking: " + station.banking_available + "<br>";
                     	//var button = "<input type='submit' onclick='myFunction(" + station_number + ")' value='Click for more detailed information' class='submit'></input>";
                         var button = "<button onclick='myFunction(" + station_number + ")'>Click here for more detailed information!</button>";
