@@ -25,6 +25,7 @@ div.inline {
 
 #availability {
     border: 2px solid black;
+    display: none;
     color: white;
     height: 200px;
     width: 200px;
