@@ -85,14 +85,25 @@ def get_charts_daily():
     daily_average_bikes = []
     daily_average_stands = []
     for day in days: 
-        daily_average_bikes.append(daily_avg_bikes_stands(station_number, day)[0])
-        daily_average_stands.append(daily_avg_bikes_stands(station_number, day)[1])
+        daily_average_bikes.append(daily_avg_dynamic(station_number, day)[0])
+        daily_average_stands.append(daily_avg_dynamic(station_number, day)[1])
     print("Daily Averages: ", daily_average_bikes)
     daily = jsonify(daily_average_bikes=daily_average_bikes, daily_average_stands=daily_average_stands)
     return daily
 
+@app.route('/charts_hourly', methods=['GET', 'POST'])
+@cross_origin()
+def get_charts_hourly():
+    """Gets the average number of bikes and stands per hour for a given day"""
+    station_number = request.args.get('station_number')
+    day = request.args.get('day')
+    hourly_average_bikes = hourly_avg_dynamic(station_number, day)[0]
+    hourly_average_stands = hourly_avg_dynamic(station_number, day)[1]
+    hourly = jsonify(hourly_average_bikes=hourly_average_bikes, hourly_average_stands=hourly_average_stands)
+    return hourly
+
 # For Google Charts: 
-def daily_avg_bikes_stands(station_number, day):
+def daily_avg_dynamic(station_number, day):
     """Returns the average number of bike per day"""
     engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
     sql = "select bikes_available, bike_stands_available from availability where station_number = %s and day = %s;"
@@ -110,47 +121,48 @@ def daily_avg_bikes_stands(station_number, day):
     engine.dispose()
     return avg_bikes, avg_bike_stands
  
-def station_hourly(station_number):
-    """Returns the average number of bikes per hour for a particular station
-    on a particular day
-    Does this need to be a dictionary to be able to be used with jsonify?"""
-    #hourly_averages = dict()
-    averages = [] # will be an array of arrays
-    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    for i in range(len(days)):
-        bikes_perhour = get_bikes_per_hour(station_number, days[i]) # returns an array
-        averages.append(bikes_perhour)
-    print("averages for each day per hour", averages)
-    return averages
- 
-def get_bikes_per_hour(station_number, day):
+def hourly_avg_dynamic(station_number, day):
     """Getting the hourly average bikes for a particular station on a particular day"""
     sql = "select * from availability where station_number = %s;"
     engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
     station_details = engine.execute(sql, station_number).fetchall()
-    engine.dispose()
-    # Every index in hours will represent it's corresponding hour - going by a 24hr clock we can have 0 up to 24 indices
-    # A list of lists containing the sum of bikes so far and the counter for calculating the average? 
-    hours = []
-    avgs = []
+    engine.dispose()    
+    hours_bikes = []
+    hours_stands = []
+    avg_bikes = []
+    avg_stands = []
+    
     for i in range(25):
-        # initialise default values
-        hours.append([0, 0])
+        hours_bikes.append([0, 0])
+        hours_stands.append([0, 0])
+        print("I is ", i)
         
     for station in station_details:
         num_bikes = station["bikes_available"]
+        num_stands = station["bike_stands_available"]
+        #working out which hour we are dealing with
         last_update = station["last_updated"]
         dtime = scraper.datetime_formatter(last_update)
         hour = int(dtime[1][11:13])
-        hours[hour][0] += num_bikes
-        hours[hour][1] += 1
+        
+        hours_bikes[hour][0] += num_bikes
+        hours_bikes[hour][1] += 1
+        
+        hours_stands[hour][0] += num_stands
+        hours_stands[hour][1] += 1
  
-    for hour in hours:
+    for hour in hours_bikes:
         if hour[0] > 0 and hour[1] > 0:
-            avg_bikes = hour[0]/hour[1]
-            avgs.append(int(round(avg_bikes, 0)))
-    print("AVERAGES ", avgs)
-    return avgs
+            avg_bikes_hour = int(round((hour[0]/hour[1]), 0))
+            print(avg_bikes_hour)
+            avg_bikes.append(avg_bikes_hour)
+        
+    for hour in hours_stands:
+        if hour[0] > 0 and hour[1] > 0:
+            avg_stands_hour = int(round((hour[0]/hour[1]), 0))
+            avg_stands.append(avg_stands_hour)
+
+    return avg_bikes, avg_stands
 
 
 if __name__ == "__main__":
