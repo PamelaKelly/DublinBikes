@@ -1,6 +1,13 @@
  //Ideas for this code (getting the markers on the map from the json data) was adapted from code given in the lecure notes (lecutre 16-17)
 // and https://gist.github.com/parth1020/4481893. Aslo from the Google map API - https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
 
+google.charts.load("visualization", "1", {packages:["corechart"]});
+
+// Event Listener function so that drawChart is called on click event 
+$('html', 'body').click(function() {
+	drawChart(data);
+});
+
 $( document ).ready(function() {
         //console.log( "document loaded" );
         getWeather();
@@ -89,7 +96,41 @@ function getOccupancy(station_number) {
             var content = "Station address: " + station.station_address + "<br>" + "Bikes available: " + station.bikes_available +"<br>" + "Bike stands available: " + station.bike_stands_available + "<br>";
             document.getElementById("availability").innerHTML = content;
         })
-    })
+    });
+	function drawChart(data) {
+		//var array = JSON.parse(data_array);
+		var data_array_bikes = data.daily_average_bikes;
+		var data_array_stands = data.daily_average_stands;
+		var data_daily = new google.visualization.DataTable(data_array_bikes);
+
+		data_daily.addColumn('string', 'Day');
+		data_daily.addColumn('number', 'Bikes');
+		data_daily.addColumn('number', 'Stands');
+
+		data_daily.addRows([
+			['Monday', data_array_bikes[0], data_array_stands[0]],
+			['Tuesday', data_array_bikes[1], data_array_stands[1]],
+			['Wednesday', data_array_bikes[2], data_array_stands[2]],
+			['Thursday', data_array_bikes[3], data_array_stands[3]],
+			['Friday', data_array_bikes[4], data_array_stands[4]],
+			['Saturday', data_array_bikes[5], data_array_stands[5]],
+			['Sunday', data_array_bikes[6], data_array_stands[6]]
+		]);
+		
+		//Set chart options
+		var options = {'title':'Daily Averages:', 'width': 400, 'height': 300};
+		
+		//instantiate and draw our chart, passing in some options
+		var chart = new google.visualization.BarChart(document.getElementById('daily_div'));
+		chart.draw(data_daily, options);
+	}
+
+	var jqxhr2 = $.getJSON("http://127.0.0.1:5000/charts_daily?station_number=" + station_number + "\"", null, function(data) {
+		google.charts.setOnLoadCallback(drawChart(data));
+	});
+}	
+	
+	/*
 	var jqxhr2 = $.getJSON("http://127.0.0.1:5000/charts?station_number=" + station_number + "\"", null, drawCharts(data)) 
 	
 	function drawCharts(data) {
@@ -173,6 +214,8 @@ function getOccupancy(station_number) {
 	
 	setTimeout(loadCharts, 200);
 }
+
+*/
 
 //google.load('visualization', '1', {packages: ['corechart', 'bar']});
 //google.setOnLoadCallback(drawCharts);

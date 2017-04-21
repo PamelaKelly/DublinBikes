@@ -88,7 +88,7 @@ def get_charts_daily():
         daily_average_bikes.append(daily_avg_bikes_stands(station_number, day)[0])
         daily_average_stands.append(daily_avg_bikes_stands(station_number, day)[1])
     print("Daily Averages: ", daily_average_bikes)
-    daily = jsonify(daily_averages=daily_average_bikes)
+    daily = jsonify(daily_average_bikes=daily_average_bikes, daily_average_stands=daily_average_stands)
     return daily
 
 # For Google Charts: 
