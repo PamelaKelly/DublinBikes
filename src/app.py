@@ -69,66 +69,58 @@ def station_details():
     #Info will be pulled from a javascript function on the home page
     station_number = request.args.get('station_number')
     engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
-    sql = "SELECT * FROM availability WHERE station_number = %s ORDER BY last_updated DESC LIMIT 1;"
+    sql = "SELECT *, station_name FROM availability, bike_stations WHERE availability.station_number = %s and availability.station_number = bike_stations.station_number ORDER BY last_updated DESC LIMIT 1;"
     details = engine.execute(sql, station_number).fetchall()
     print("#found {} stations", len(details))
     details = jsonify(stations=[dict(detail) for detail in details])
     engine.dispose()
     return details
 
-@app.route('/charts', methods=['GET', 'POST'])
+@app.route('/charts_daily', methods=['GET', 'POST'])
 @cross_origin()
-def get_charts():
+def get_charts_daily():
+    """Gets the average number of bikes and stands for each day"""
     station_number = request.args.get('station_number')
-    daily_averages = station_daily(station_number)
-    daily = jsonify(daily_averages=daily_averages)
-    hourly_averages = station_hourly(station_number)
-    hourly = jsonify(hours=[dict(hour) for hour in hourly_averages])
-    #bikes_hourly = jsonify(hourly_days=[dict(day) for day in hourly_averages])
-    return daily, hourly
+    days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    daily_average_bikes = []
+    daily_average_stands = []
+    for day in days: 
+        daily_average_bikes.append(daily_avg_bikes_stands(station_number, day)[0])
+        daily_average_stands.append(daily_avg_bikes_stands(station_number, day)[1])
+    print("Daily Averages: ", daily_average_bikes)
+    daily = jsonify(daily_averages=daily_average_bikes)
+    return daily
 
 # For Google Charts: 
-def get_avg_bikes(station_number, day):
+def daily_avg_bikes_stands(station_number, day):
     """Returns the average number of bike per day"""
     engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
     sql = "select bikes_available, bike_stands_available from availability where station_number = %s and day = %s;"
     results = engine.execute(sql,station_number,day).fetchall()
-    sum_bikes_available = 0
-    sum_bike_stands_available = 0
-    count_rows = 0
+    bikes = []
+    bike_stands = []
     
     for row in results:
-        sum_bikes_available += row["bikes_available"]
-        sum_bike_stands_available += row["bike_stands_available"]
-        count_rows += 1
-     
-    if count_rows > 0:    
-        avg_bikes = sum_bikes_available/count_rows
-        avg_bike_stands = sum_bike_stands_available/count_rows
+        bikes.append(row["bikes_available"])
+        bike_stands.append(row["bike_stands_available"])
+
+    avg_bikes = int(round((sum(bikes)/len(bikes)), 0))
+    avg_bike_stands = int(round((sum(bike_stands)/len(bike_stands)), 0))
         
     engine.dispose()
     return avg_bikes, avg_bike_stands
-
-def station_daily(station_number):
-    """Returns the average number of bikes per day for a particular bike station
-    Does this need to be a dictionary to be able to be used in a jsonify?"""
-    averages = []
-    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    for i in range(len(days)):
-        avg_this_day = get_avg_bikes(station_number, days[i])[0]
-        averages.append(int(round(avg_this_day, 0)))
-    return averages
  
 def station_hourly(station_number):
     """Returns the average number of bikes per hour for a particular station
     on a particular day
     Does this need to be a dictionary to be able to be used with jsonify?"""
     #hourly_averages = dict()
-    averages = []
+    averages = [] # will be an array of arrays
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     for i in range(len(days)):
-        bikes_perhour = get_bikes_per_hour(station_number, days[i])
+        bikes_perhour = get_bikes_per_hour(station_number, days[i]) # returns an array
         averages.append(bikes_perhour)
+    print("averages for each day per hour", averages)
     return averages
  
 def get_bikes_per_hour(station_number, day):
@@ -137,7 +129,6 @@ def get_bikes_per_hour(station_number, day):
     engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
     station_details = engine.execute(sql, station_number).fetchall()
     engine.dispose()
-    #station_details = jsonify(stations=[dict(result) for result in results]) 
     # Every index in hours will represent it's corresponding hour - going by a 24hr clock we can have 0 up to 24 indices
     # A list of lists containing the sum of bikes so far and the counter for calculating the average? 
     hours = []
@@ -158,7 +149,7 @@ def get_bikes_per_hour(station_number, day):
         if hour[0] > 0 and hour[1] > 0:
             avg_bikes = hour[0]/hour[1]
             avgs.append(int(round(avg_bikes, 0)))
-         
+    print("AVERAGES ", avgs)
     return avgs
 
 
