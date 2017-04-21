@@ -60,7 +60,7 @@ function showStationMarkers() {
 						var station_number = station.station_number;
                     	var content = "Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address + "<br>" + "Banking: " + station.banking_available + "<br>";
                     	//var button = "<input type='submit' onclick='myFunction(" + station_number + ")' value='Click for more detailed information' class='submit'></input>";
-                        var button = "<button onclick='getOccupancy(" + station_number + ")'>Click here for more detailed information!</button>";
+                        var button = "<button onclick='showDiv(); getOccupancy(" + station_number + ")'>Click here for more detailed information!</button>";
                         infoWindow.setContent(content + "<br> " + button);
                         infoWindow.open(map, marker);
                     }
@@ -74,10 +74,10 @@ function showStationMarkers() {
 
 showStationMarkers();
 
-// This appends the given variable url to the end of the url without reloading the page
-// http://stackoverflow.com/questions/35395485/change-url-without-refresh-the-page   
-function update_url(url) {
-    history.pushState(null, null, url);
+//Functions to show/hide data - the occupancy info etc.
+function showDiv(){
+    div = document.getElementById("display");
+    div.style.display = "inline-block";
 }
 
 // Gets occupancy information for a given station
@@ -86,7 +86,7 @@ function getOccupancy(station_number) {
     var jqxhr = $.getJSON("http://127.0.0.1:5000/station_details?station_number=" + station_number + "\"", null, function(data){
         var station_details = data.stations;
         _.forEach(station_details, function(station){
-            var content = "Station address: " + station.address + "Bikes available: " + station.bikes_available +"<br>" + "Bike stands available: " + station.bike_stands_available + "<br>";
+            var content = "Station address: " + station.station_address + "<br>" + "Bikes available: " + station.bikes_available +"<br>" + "Bike stands available: " + station.bike_stands_available + "<br>";
             document.getElementById("availability").innerHTML = content;
         })
     })
@@ -172,17 +172,6 @@ function getOccupancy(station_number) {
 	}
 	
 	setTimeout(loadCharts, 200);
-}
-
-//Functions to show/hide data
-function showDiv(){
-    var click = document.getElementById("availability");
-    if (click.style.display == "none")
-    {
-        click.style.display == "block";
-    } else {
-    	click.style.display == "block";
-    }
 }
 
 //google.load('visualization', '1', {packages: ['corechart', 'bar']});
