@@ -1,15 +1,11 @@
 # This will be for flask
 import flask
-import functools
 from flask import Flask, render_template, request
 from flask import jsonify
 from scraper import scraper
 from weather import weather_scraper
 from main import Main
 from flask_cors import CORS, cross_origin
-import json
-import urllib
-import pandas as pd
 
 app = flask.Flask(__name__)
 
@@ -54,8 +50,6 @@ def availability():
     engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
     # change this to suit what queries we will be using
     sql = "SELECT * from availability;"
-    #sql = "SELECT bike_stands_available, bikes_available FROM availability where day='Wed' and station_number='1';"
-    #sql = "SELECT bike_stations.station_number, bike_stations.station_name, bike_stations.station_address, bike_stations.banking_available, availability.bike_stands, availability.bike_stands_available, availability.bikes_available FROM bike_stations INNER JOIN availability ON bike_stations.station_number=availability.station_number where availability.station_number='1';"
     rows = engine.execute(sql).fetchall()
     print("#found {} availability", len(rows))
     availability = jsonify(stations=[dict(row) for row in rows])
