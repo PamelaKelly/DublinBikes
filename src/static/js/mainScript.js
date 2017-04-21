@@ -6,6 +6,7 @@ google.charts.load("visualization", "1", {packages:["corechart"]});
 // Event Listener function so that drawChart is called on click event 
 $('html', 'body').click(function() {
 	drawChart(data);
+	drawHourly(data);
 });
 
 $( document ).ready(function() {
@@ -97,6 +98,7 @@ function getOccupancy(station_number) {
             document.getElementById("availability").innerHTML = content;
         })
     });
+	
 	function drawChart(data) {
 		//var array = JSON.parse(data_array);
 		var data_array_bikes = data.daily_average_bikes;
@@ -127,6 +129,35 @@ function getOccupancy(station_number) {
 
 	var jqxhr2 = $.getJSON("http://127.0.0.1:5000/charts_daily?station_number=" + station_number + "\"", null, function(data) {
 		google.charts.setOnLoadCallback(drawChart(data));
+	});
+	
+	function drawHourly(data) {
+		var hourly_bikes_array = data.hourly_average_bikes;
+		var hourly_stands_array = data.hourly_average_stands;
+		var data_hourly = new google.visualization.DataTable(hourly_bikes_array);
+		
+		data_hourly.addColumn('string', 'Hour');
+		data_hourly.addColumn('number', 'Bikes');
+		data_hourly.addColumn('number', 'Stands');
+		
+		var labels = ['12am-1am', '1am-2am', '2am-3am', '3am-4am', '4am-5am', '5am-6am', '6am-7am', '7am-8am', '8am-9am', '9am-10am', '10am-11am',
+		'11am-12pm', '12pm-1pm', '1pm-2pm', '2pm-3pm', '3pm-4pm', '4pm-5pm', '5pm-6pm', '6pm-7pm', '7pm-8pm', '8pm-9pm', '9pm-10pm', '10pm-11pm', '11pm-12am'];
+		
+		var i;
+		for (i = 0; i < 25; i++) {
+			data_hourly.addRows([
+				[labels[i], hourly_bikes_array[i], hourly_stands_array[i]]
+			]);
+		};	
+		
+		var options = {'title': 'Hourly Averages', 'width': 400, 'height': 300};
+		
+		var chart = new google.visualization.BarChart(document.getElementById("hourly_div"));
+		chart.draw(data_hourly, options);
+	}
+	var day = 'Mon';
+	var jqxhr3 = $.getJSON("http://127.0.0.1:5000/charts_hourly?station_number=" + station_number + "?day=" + day + "\"", null, function(data) {
+		google.charts.setOnLoadCallback(drawHourly(data));
 	});
 }	
 	

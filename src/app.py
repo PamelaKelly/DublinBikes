@@ -154,7 +154,6 @@ def hourly_avg_dynamic(station_number, day):
     for hour in hours_bikes:
         if hour[0] > 0 and hour[1] > 0:
             avg_bikes_hour = int(round((hour[0]/hour[1]), 0))
-            print(avg_bikes_hour)
             avg_bikes.append(avg_bikes_hour)
         
     for hour in hours_stands:
