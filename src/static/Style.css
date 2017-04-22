@@ -3,17 +3,7 @@ body {
     font-family: "calibri";
 }
 
-header {
-/*
-    top: 0px;
-    width: 100%;
-    background-color: orange;
-    height: 60px;
-    color: white;
-    text-align: center;
-    font-size: 26px;    
-*/
-    
+header, footer {
     list-style-type: none;
     margin: 0;
     overflow: hidden;
@@ -24,6 +14,7 @@ header {
     max-height: 100px;
     border-radius: 15px;
     width: 100%;
+    position: relative;
 }
 
 #map {
@@ -33,7 +24,6 @@ header {
 div.container {
     width: 90%;
     height: 540px;
-    font-family: "calibri";
     margin: auto;
     display: block;
     position: relative;
@@ -57,19 +47,8 @@ div.inline {
 #image {
     border: 2px solid black;
     border-radius: 15px;
-    width: 218px;
-    height: 120px;
-}
-
-div.polaroid {
-    margin-left: 74px;
-    display: none;
-    width: 220px;
-    height: 250px;
-    border: 2px solid black;
-    border-radius: 15px;
-    background-color: #084C55;
-    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width: 248px;
+    height: 160px;
 }
 
 .weatherDiv {
@@ -84,7 +63,7 @@ div.polaroid {
     right: 10px;
     width: 20%;
     height: 500px;
-    font-size: 18px;
+    font-size: 17px;
     background-color: #084C55;
     text-align: center;
     border: 2px solid black;
@@ -93,37 +72,28 @@ div.polaroid {
 
 div.container2 {
     width: 90%;
-    background-color: white;
     margin: auto;
-    height: 450px;
+    height: 480px;
     display: block;
+    position: relative;
+    clear: both;
 }
 
-/*Code for overflow was obtained from w3schools.com at http://www.w3schools.com/css/css_table.asp
-The code for text shadow was adapted from w3schools at http://www.w3schools.com/cssref/css3_pr_text-shadow.asp
-Code for box-shadow adapted from w3schools.com at http://www.w3schools.com/css/css3_images.asp     */
-div.left {
+div.polaroid {
+    text-align: center;
+    font-size: 17.5px;
     float: left;
-    left: 10px;
-    padding: 10px;
-    width: 45%;
-    height: 150px;
+    display: none;
+    width: 250px;
+    height: 400px;
     border: 2px solid black;
-    color: black;
+    border-radius: 15px;
+    background-color: #084C55;
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    background: white;
 }
 
-div.right {
-    background: white;
-    float: left;
-    right: 1px;
-    padding: 10px;
-    width: 45%;
-    height: 150px;
-    border: 2px solid black;
-    color: black;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+div.stats {
+    float: left;   
 }
 
 button {
@@ -142,4 +112,10 @@ button {
 button:hover {
     background-color: #084C55;
     color: white;
+}
+
+/*http://stackoverflow.com/questions/34331351/how-to-resize-animated-gif-with-html-css*/
+img.animated-gif{
+  width: 100px;
+  height: 80px;
 }

@@ -1,6 +1,5 @@
  //Ideas for this code (getting the markers on the map from the json data) was adapted from code given in the lecure notes (lecutre 16-17)
 // and https://gist.github.com/parth1020/4481893. Aslo from the Google map API - https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
-
 google.charts.load("visualization", "1", {packages:["corechart"]});
 
 // Event Listener function so that drawChart is called on click event 
@@ -35,7 +34,7 @@ function getWeather(){
 })
 }
 
-
+// Function to make the markers and display them on the map
 function showStationMarkers() {
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 13,
@@ -94,7 +93,7 @@ function getOccupancy(station_number) {
     var jqxhr = $.getJSON("http://127.0.0.1:5000/station_details?station_number=" + station_number + "\"", null, function(data){
         var station_details = data.stations;
         _.forEach(station_details, function(station){
-            var content = "Station address: " + station.station_address + "<br>" + "Bikes available: " + station.bikes_available +"<br>" + "Bike stands available: " + station.bike_stands_available + "<br>";
+            var content = "<b><u>Station</u></b> <br><br> Address: " + station.station_address + "<br><br>" + "<b><u>Currently there are: </u></b><br><br> Bikes available: " + station.bikes_available +"<br>" + "Bike stands available: " + station.bike_stands_available + "<br>";
             document.getElementById("availability").innerHTML = content;
         })
     });
@@ -120,7 +119,7 @@ function getOccupancy(station_number) {
 		]);
 		
 		//Set chart options
-		var options = {'title':'Daily Averages:', 'width': 400, 'height': 300};
+		var options = {'title':'Daily Averages:', 'width': 500, 'height': 400};
 		
 		//instantiate and draw our chart, passing in some options
 		var chart = new google.visualization.BarChart(document.getElementById('daily_div'));
@@ -150,7 +149,7 @@ function getOccupancy(station_number) {
 			]);
 		};	
 		
-		var options = {'title': 'Hourly Averages', 'width': 400, 'height': 300};
+		var options = {'title': 'Hourly Averages', 'width': 500, 'height': 400};
 		
 		var chart = new google.visualization.BarChart(document.getElementById("hourly_div"));
 		chart.draw(data_hourly, options);
@@ -159,106 +158,4 @@ function getOccupancy(station_number) {
 	var jqxhr3 = $.getJSON("http://127.0.0.1:5000/charts_hourly?station_number=" + station_number + "?day=" + day + "\"", null, function(data) {
 		google.charts.setOnLoadCallback(drawHourly(data));
 	});
-}	
-	
-	/*
-	var jqxhr2 = $.getJSON("http://127.0.0.1:5000/charts?station_number=" + station_number + "\"", null, drawCharts(data)) 
-	
-	function drawCharts(data) {
-		var data_daily = google.visualization.arrayToDataTable([
-		['Day', 'Average Bikes Available', 'Average Stands Available', {role: 'style'}],
-		['Monday', '{{bikes_perday[0]}}', 'green'],
-		['Tuesday', '{{bikes_perday[1]}}', 'grey'],
-		['Wednesday', '{{bikes_perday[2]}}', 'green'],
-		['Thursday', '{{bikes_perday[3]}}', 'grey'],
-		['Friday', '{{bikes_perday[4]}}', 'green'],
-		['Saturday', '{{bikes_perday[5]}}', 'grey'],
-		['Sunday', '{{bikes_perday[6]}}', 'green']
-		]);
-	
-		var data_hourly = google.visualization.arrayToDataTable([
-		['Hour', 'Average Bikes Available', 'Average Stands Available', {role: 'style'}],
-		['12am', '{{bikes_perhour[0]}}', 'green'],
-		['1am', '{{bikes_perhour[1]}}', 'grey'],
-		['2am', '{{bikes_perhour[2]}}', 'green'],
-		['3am', '{{bikes_perhour[3]}}', 'grey'],
-		['4am', '{{bikes_perhour[4]}}', 'green'],
-		['5am', '{{bikes_perhour[5]}}', 'grey'],
-		['6am', '{{bikes_perhour[6]}}', 'green'],
-		['7am', '{{bikes_perhour[7]}}', 'grey'],
-		['8am', '{{bikes_perhour[8]}}', 'green'],
-		['9am', '{{bikes_perhour[9]}}', 'grey'],
-		['10am','{{bikes_perhour[10]}}', 'green'],
-		['11am', '{{bikes_perhour[11]}}', 'grey'],
-		['12pm', '{{bikes_perhour[12]}}', 'green'],
-		['1pm', '{{bikes_perhour[13]}}', 'grey'],
-		['2pm', '{{bikes_perhour[14]}}', 'green'],
-		['3pm', '{{bikes_perhour[15]}}', 'grey'],
-		['4pm', '{{bikes_perhour[16]}}', 'green'],
-		['5pm', '{{bikes_perhour[17]}}', 'grey'],
-		['6pm', '{{bikes_perhour[18]}}', 'green'],
-		['7pm', '{{bikes_perhour[19]}}', 'grey'],
-		['8pm', '{{bikes_perhour[20]}}', 'green'],
-		['9pm', '{{bikes_perhour[21]}}', 'grey'],
-		['10pm', '{{bikes_perhour[22]}}', 'green'],
-		['11pm', '{{bikes_perhour[23]}}', 'grey'],
-		['12pm', '{{bikes_perhour[24]}}', 'grey']
-		]);
-	
-		var options_daily = {
-			title: 'Average Daily Occupancy',
-			chartArea: {width: '25%'},
-			hAxis: {
-				title: '',
-				minValue: 0
-			},
-			vAxis: {
-				title: ''
-			}
-		};
-		
-		var options_hourly = {
-			title: 'Average Hourly Occupancy',
-			chartArea: {width: '25%'},
-			hAxis: {
-				title: '',
-				minValue: 0
-			},
-			vAxis: {
-				title: ''
-			}
-		};
-		
-	}
-		
-		var chart_daily = new google.visualization.BarChart(document.getElementById("daily_div"));
-		var chart_hourly = new google.visualization.BarChart(document.getElementById("hourly_div"));
-		
-		chart_daily.draw(data_daily, options_daily);
-		chart_hourly.draw(data_hourly, options_hourly);	
-	
-	function loadCharts() {
-			//google.load("visualization", "1", {"callback": drawCharts});
-			google.load('visualization', '1', {packages: ['corechart', 'bar']});
-			console.log("Callback is set");
-	}
-	
-	setTimeout(loadCharts, 200);
-}
-
-*/
-
-//google.load('visualization', '1', {packages: ['corechart', 'bar']});
-//google.setOnLoadCallback(drawCharts);
-
-//drawCharts()
-   
-//Get weather info
-function displayWeather() {
- 	var jqxhr = $.getJSON("http://127.0.0.1/weather", null, function(data) {
-            var weather = data.weather;
-            _.forEach(weather, function(weather) {
-             	infowindow.setContent(weather.main);
-            })
-        })
 }

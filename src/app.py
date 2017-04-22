@@ -129,7 +129,6 @@ def hourly_avg_dynamic(station_number, day):
     for i in range(25):
         hours_bikes.append([0, 0])
         hours_stands.append([0, 0])
-        print("I is ", i)
         
     for station in station_details:
         num_bikes = station["bikes_available"]
