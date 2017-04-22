@@ -93,7 +93,7 @@ function getOccupancy(station_number) {
     var jqxhr = $.getJSON("http://127.0.0.1:5000/station_details?station_number=" + station_number + "\"", null, function(data){
         var station_details = data.stations;
         _.forEach(station_details, function(station){
-            var content = "<b><u>Station</u></b> <br><br> Address: " + station.station_address + "<br><br>" + "<b><u>Currently there are: </u></b><br><br> Bikes available: " + station.bikes_available +"<br>" + "Bike stands available: " + station.bike_stands_available + "<br>";
+            var content = "<b><u>Station:</u></b> <br><br> Address: " + station.station_address + "<br><br>" + "<b><u>Currently there are: </u></b><br><br> Bikes available: " + station.bikes_available +"<br>" + "Bike stands available: " + station.bike_stands_available + "<br>";
             document.getElementById("availability").innerHTML = content;
         })
     });
