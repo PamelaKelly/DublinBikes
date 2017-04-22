@@ -33,17 +33,6 @@ def get_stations():
     engine.dispose()
     return stations
 
-@app.route("/weather")
-@cross_origin()
-def get_weather():
-    engine = weather_scraper.connect_weather_db()
-    sql = "select * from weather_data"
-    rows = engine.execute(sql).fetchall()
-    print("#found {} data points", len(rows))
-    weather = jsonify(weather=[dict(row) for row in rows])
-    engine.dispose()
-    return weather
-
 @app.route("/availability")
 @cross_origin()
 def availability():
