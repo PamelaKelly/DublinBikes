@@ -18,7 +18,6 @@ function getWeather(){
 //call weather API from openweathermap
     var weatherdata;
     $.getJSON('http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid=d3d46f56da72cd82f71b36179d95b0bd',function(data){
-//    console.log("got data, ", data);
     var currentWeather = data.weather[0].description;
     var current_temp=data.main.temp;
     var wind_speed=data.wind.speed;
@@ -56,7 +55,6 @@ function showStationMarkers() {
                     station_number: station.station_number
                 });
 				marker.metadata = {type: "point", id: station.station_number};
-                //var stationNum = "{{ stations.station_number }}";
                 google.maps.event.addListener(marker, 'click', (function(marker, stations) {
                     return function() {
                         if (station.banking_available == 0) {
@@ -66,7 +64,6 @@ function showStationMarkers() {
                         }
 						var station_number = station.station_number;
                     	var content = "Station name: " + station.station_name + "<br>" + "Station number: " + station.station_number + "<br>" + "Address: " + station.station_address + "<br>" + "Banking: " + station.banking_available + "<br>";
-                    	//var button = "<input type='submit' onclick='myFunction(" + station_number + ")' value='Click for more detailed information' class='submit'></input>";
                         var button = "<button onclick='showDiv(); getOccupancy(" + station_number + ")'>Click here for more detailed information!</button>";
                         infoWindow.setContent(content + "<br> " + button);
                         infoWindow.open(map, marker);
