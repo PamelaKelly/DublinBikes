@@ -157,4 +157,4 @@ function getOccupancy(station_number) {
 	var jqxhr3 = $.getJSON("http://127.0.0.1:5000/charts_hourly?station_number=" + station_number + "?day=" + day + "\"", null, function(data) {
 		google.charts.setOnLoadCallback(drawHourly(data));
 	});
-} 
+}  
