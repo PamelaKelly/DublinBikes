@@ -58,9 +58,26 @@
                 <p id="availability"></p>
        </div>
 	   <div class="stats" id ="daily_div"></div>
-	   <div class="stats" id ="hourly_div"></div>           
-       </div>
-       <footer> © Pamela Emma Katherine  </footer>
+<!--	   <div class="stats" id="hourly_div"></div>           -->
+       
+       
+       <form>
+  <select day="day">
+    <option value="Mon">Monday</option>
+    <option value="Tue">Tuesday</option>
+    <option value="Wed">Wednesday</option>
+    <option value="Thu">Thursday</option>
+    <option value="Fri">Friday</option>
+    <option value="Sat">Saturday</option>
+    <option value="Sun">Sunday</option>
+  </select>
+  <br><br>
+  <input id ="hourly_div" type="button" value="Submit" onclick="getOccupancy.drawHourly(document.getElementById('hourly_div'))">
+</form>
+           </div>
+
+       
+       <footer> © Pamela Emma Katherine 2017 </footer>
    
    </body>
 </html>

@@ -154,7 +154,9 @@ function getOccupancy(station_number) {
 		var chart = new google.visualization.BarChart(document.getElementById("hourly_div"));
 		chart.draw(data_hourly, options);
 	}
-	var day = 'Mon';
+	//var day = 'Mon';
+    var day = document.getElementById('hourly_div').value;
+    console.log(day);
 	var jqxhr3 = $.getJSON("http://127.0.0.1:5000/charts_hourly?station_number=" + station_number + "?day=" + day + "\"", null, function(data) {
 		google.charts.setOnLoadCallback(drawHourly(data));
 	});
