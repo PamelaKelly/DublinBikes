@@ -7,6 +7,7 @@ from weather import weather_scraper
 from main import Main
 from flask_cors import CORS, cross_origin
 
+
 app = flask.Flask(__name__)
 
 app.add_url_rule('/',
@@ -25,7 +26,7 @@ def page_not_found(error):
 @app.route("/stations")
 @cross_origin()
 def get_stations():
-    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     sql = "select * from bike_stations;"
     rows = engine.execute(sql).fetchall()
     print("#found {} stations", len(rows))
@@ -36,7 +37,7 @@ def get_stations():
 @app.route("/availability")
 @cross_origin()
 def availability():
-    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     # change this to suit what queries we will be using
     sql = "SELECT * from availability;"
     rows = engine.execute(sql).fetchall()
@@ -51,7 +52,7 @@ def station_details():
     """Function to get dyanmic details for stations"""
     #Info will be pulled from a javascript function on the home page
     station_number = request.args.get('station_number')
-    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     sql = "SELECT *, station_name FROM availability, bike_stations WHERE availability.station_number = %s and availability.station_number = bike_stations.station_number ORDER BY last_updated DESC LIMIT 1;"
     details = engine.execute(sql, station_number).fetchall()
     print("#found {} stations", len(details))
@@ -88,7 +89,7 @@ def get_charts_hourly():
 # For Google Charts: 
 def daily_avg_dynamic(station_number, day):
     """Returns the average number of bike per day"""
-    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     sql = "select bikes_available, bike_stands_available from availability where station_number = %s and day = %s;"
     results = engine.execute(sql,station_number,day).fetchall()
     bikes = []
@@ -107,7 +108,7 @@ def daily_avg_dynamic(station_number, day):
 def hourly_avg_dynamic(station_number, day):
     """Getting the hourly average bikes for a particular station on a particular day"""
     sql = "select * from availability where station_number = %s;"
-    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "db_password.txt")
+    engine = scraper.connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     station_details = engine.execute(sql, station_number).fetchall()
     engine.dispose()    
     hours_bikes = []

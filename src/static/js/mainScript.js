@@ -42,7 +42,7 @@ function showStationMarkers() {
     });
     // Info window from Google Map API https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
     var infoWindow = new google.maps.InfoWindow();
-    var jqxhr = $.getJSON("http://127.0.0.1:5000/stations", null, function(data) {
+    var jqxhr = $.getJSON("http://ec2-34-208-241-74.us-west-2.compute.amazonaws.com/stations", null, function(data) {
             var stations = data.stations;
             _.forEach(stations, function(station) {
                 var marker = new google.maps.Marker({
@@ -87,7 +87,7 @@ function showDiv(){
 // Gets occupancy information for a given station
 function getOccupancy(station_number) {
     document.getElementById("availability").style.display = "inline-block";
-    var jqxhr = $.getJSON("http://127.0.0.1:5000/station_details?station_number=" + station_number + "\"", null, function(data){
+    var jqxhr = $.getJSON("http://ec2-34-208-241-74.us-west-2.compute.amazonaws.com/station_details?station_number=" + station_number + "\"", null, function(data){
         var station_details = data.stations;
         _.forEach(station_details, function(station){
             var content = "<b><u>Station:</u></b> <br><br> Address: " + station.station_address + "<br><br>" + "<b><u>Currently there are: </u></b><br><br> Bikes available: " + station.bikes_available +"<br>" + "Bike stands available: " + station.bike_stands_available + "<br>";
@@ -123,7 +123,7 @@ function getOccupancy(station_number) {
 		chart.draw(data_daily, options);
 	}
 
-	var jqxhr2 = $.getJSON("http://127.0.0.1:5000/charts_daily?station_number=" + station_number + "\"", null, function(data) {
+	var jqxhr2 = $.getJSON("http://ec2-34-208-241-74.us-west-2.compute.amazonaws.com/charts_daily?station_number=" + station_number + "\"", null, function(data) {
 		google.charts.setOnLoadCallback(drawChart(data));
 	});
 	
@@ -152,6 +152,7 @@ function getOccupancy(station_number) {
 		chart.draw(data_hourly, options);
 	}
 	var day = 'Mon';
+	//just shows hourly data for monday at the moment... 
     console.log(day);
 	var jqxhr3 = $.getJSON("http://127.0.0.1:5000/charts_hourly?station_number=" + station_number + "?day=" + day + "\"", null, function(data) {
 		google.charts.setOnLoadCallback(drawHourly(data));

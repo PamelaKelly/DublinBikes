@@ -104,7 +104,6 @@ def connect_db(URI, PORT, DB, USER, password_file):
 
 def write_to_stations(data, filename):
     #filename not used here but want to use a callback in 
-    #write to file... 
     engine = connect_db("DublinBikeProjectDB.cun91scffwzf.eu-west-1.rds.amazonaws.com", "3306", "DublinBikeProjectDB", "theForkAwakens", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/scraper/db_password.txt")
     Session = sessionmaker(bind=engine)
     session = Session()

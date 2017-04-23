@@ -39,7 +39,7 @@ class weather(Base):
 def connect_weather_db():
     """Connects to the database"""
     try:
-        engine = scraper.scraper.connect_db("weatherdb.cnmhll8wqxlt.us-west-2.rds.amazonaws.com", "3306", "WeatherDB", "Administrator", "weatherDB_password.txt")
+        engine = scraper.scraper.connect_db("weatherdb.cnmhll8wqxlt.us-west-2.rds.amazonaws.com", "3306", "WeatherDB", "Administrator", "/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/weather/weatherDB_password.txt")
         return engine
     except Exception as e:
         print("Error Type: ", type(e))
@@ -75,7 +75,7 @@ def write_to_weather_db(data):
 def get_weather_data():
     """Sends the request to the open weather API and returns a json file"""
     try:
-        data = scraper.scraper.get_data("weather_api_key.txt", "http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid=", NAME=None)
+        data = scraper.scraper.get_data("/home/ubuntu/anaconda3/envs/TheForkAwakens/Assignment4-P-E-K/src/weather/weather_api_key.txt", "http://api.openweathermap.org/data/2.5/weather?q=dublin,ie&units=metric&appid=", NAME=None)
         return data
     except Exception as e:
         print("Error type: ", type(e))
@@ -88,4 +88,4 @@ def run_weather_scraper():
         scraper.scraper.write_to_file(data)
         time.sleep(1800)
 
-#run_weather_scraper()
+#run_weather_scraper() # finished collecting data
